@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Activity {
+  id              Int           @id @default(autoincrement())
+  date            DateTime      @default(now())
+  title           String        @db.VarChar(255)
+  description     String?       @db.Text
+  amount          Float
+  activityType    ActivityType  @relation(fields: [activityTypeId], references: [id])
+  activityTypeId  Int
+  category        Category      @relation(fields: [categoryId], references: [id])
+  categoryId      Int
+  userId          String
+  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId Int
+
+  @@index([activityTypeId])
+  @@index([categoryId])
+  @@index([paymentMethodId])
+}
+
+model Category {
+  id               Int        @id @default(autoincrement())
+  name             String     @db.VarChar(255)
+  activities       Activity[]
+  userId           String
+  parentCategoryId Int
+  parentCategory   Category?  @relation("CategoryToCategory", fields: [parentCategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  category         Category[] @relation("CategoryToCategory")
+
+  @@index([parentCategoryId])
+}
+
+model ActivityType {
+  id             Int             @id @default(autoincrement())
+  name           String          @db.VarChar(255)
+  activities     Activity[]
+  paymentMethods PaymentMethod[]
+}
+
+model PaymentMethod {
+  id             Int          @id @default(autoincrement())
+  name           String       @db.VarChar(255)
+  userId         String
+  activityTypeId Int
+  activityType   ActivityType @relation(fields: [activityTypeId], references: [id])
+  activities     Activity[]
+
+  @@index([activityTypeId])
+}
