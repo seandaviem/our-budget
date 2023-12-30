@@ -17,7 +17,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <ClerkProvider>
-                <body className={`${archivo.variable} ${openSans.variable} bg-my-egg`}> 
+                <body className={`${archivo.variable} ${openSans.variable} bg-gray-900`}> 
                     <Header />     
                     {children}
                 </body>

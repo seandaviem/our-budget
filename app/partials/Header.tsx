@@ -4,7 +4,7 @@ export default function Header() {
     return (
         <header className="flex justify-between items-center px-8 py-4">
             <div className="logo">
-                <h1 className="text-3xl">My Budget</h1>
+                <h1 className="text-3xl text-white">My Budget</h1>
             </div>
             <nav>
                 <SignedIn>
@@ -13,6 +13,12 @@ export default function Header() {
                             afterCreateOrganizationUrl='/'
                             afterSelectOrganizationUrl='/'
                             afterSelectPersonalUrl='/'
+                            appearance={{
+                                elements: {
+                                    organizationPreviewMainIdentifier: 'text-white',
+                                    organizationSwitcherTriggerIcon: 'text-white'
+                                }
+                            }}
                         />
                         <UserButton />
                     </div>
