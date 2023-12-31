@@ -1,7 +1,14 @@
 import { auth } from '@clerk/nextjs';
 
-export function getUserId() {
+export function getUserId(): string {
     const authObj = auth();
+    let userId = '';
 
-    return authObj.orgId === undefined ? authObj.userId : authObj.orgId;
+    if (authObj && authObj.orgId !== undefined) {
+        userId = authObj.orgId as string;
+    } else if (authObj && authObj.orgId === undefined) {
+        userId = authObj.userId as string;
+    }
+
+    return userId;
 }

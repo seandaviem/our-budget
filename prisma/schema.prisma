@@ -35,7 +35,7 @@ model Category {
   name             String     @db.VarChar(255)
   activities       Activity[]
   userId           String
-  parentCategoryId Int
+  parentCategoryId Int?
   parentCategory   Category?  @relation("CategoryToCategory", fields: [parentCategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   category         Category[] @relation("CategoryToCategory")
 
