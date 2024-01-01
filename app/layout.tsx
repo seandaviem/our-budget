@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
-import Header from './partials/Header'
-import { archivo, openSans } from './helpers/fonts'
+import Header from '../partials/Header'
+import { archivo, openSans } from '../helpers/fonts'
 
 export const metadata: Metadata = {
     title: 'Create Next App',

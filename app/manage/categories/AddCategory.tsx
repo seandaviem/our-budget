@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Dispatch, SetStateAction } from "react";
 import { CategoriesSorted, sortCategories } from "./categoryHelpers";
-import AddButton from "@/app/components/AddButton";
+import AddButton from "@/components/AddButton";
 
 interface AddCategoryProps {
     parentId: number | null;

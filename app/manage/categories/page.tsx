@@ -1,6 +1,6 @@
-import { getUserId } from "@/app/helpers/getUserId";
+import { getUserId } from "@/helpers/getUserId";
 import CategoryListing from "./CategoryListing";
-import { getCategories } from "@/app/helpers/prisma/getCategories";
+import { getCategories } from "@/helpers/prisma/getCategories";
 import { sortCategories } from "./categoryHelpers";
 
 

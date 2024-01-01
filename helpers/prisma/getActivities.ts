@@ -1,4 +1,4 @@
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 import { getUserId } from "../getUserId";
 
 // export async function getActivities(limit = -1, startDate = '', endDate = '') {

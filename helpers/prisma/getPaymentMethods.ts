@@ -1,4 +1,4 @@
-import prisma from "@/app/lib/db";
+import prisma from "@/lib/db";
 import { getUserId } from "../getUserId";
 import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
 

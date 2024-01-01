@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { auth } from '@clerk/nextjs';
-import { getUserId } from './helpers/getUserId';
+import { getUserId } from '../helpers/getUserId';
 
 export default function Home() {
 

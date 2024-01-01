@@ -1,7 +1,7 @@
 import PaymentMethodsListing from "./PaymentMethodsListing";
-import { getPaymentMethods } from "@/app/helpers/prisma/getPaymentMethods";
+import { getPaymentMethods } from "@/helpers/prisma/getPaymentMethods";
 import { sortPaymentMethods } from "./paymentMethodHelpers";
-import { getGlobalActivityTypes } from "@/app/helpers/prisma/getGlobalActivityTypes";
+import { getGlobalActivityTypes } from "@/helpers/prisma/getGlobalActivityTypes";
 
 
 export default async function ManagePaymentMethods() {

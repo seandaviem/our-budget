@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import prisma from "@/app/lib/db";
-import { getUserId } from "@/app/helpers/getUserId";
-import { getCategories } from "@/app/helpers/prisma/getCategories";
+import prisma from "@/lib/db";
+import { getUserId } from "@/helpers/getUserId";
+import { getCategories } from "@/helpers/prisma/getCategories";
 
 
 export async function POST(req: Request) {
