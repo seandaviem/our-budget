@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
 import prisma from "@/app/lib/db";
 import { getUserId } from "@/app/helpers/getUserId";
+import { getPaymentMethods } from "@/app/helpers/prisma/getPaymentMethods";
 
 
 export async function POST(req: Request) {
@@ -32,26 +32,4 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({success: false, message: "Something went wrong."}, { status: 500 });
-}
-
-export async function getPaymentMethods() {
-    const userId = getUserId();
-    const paymentMethods: PaymentMethodObj[] = await prisma.paymentMethod.findMany({ 
-        where: { userId: userId },
-        select: {
-            id: true,
-            name: true,
-            activityType: true
-        },
-        orderBy: [
-            {
-                activityTypeId: 'asc',
-            },
-            {
-                name: 'asc',
-            },
-        ],
-    });
-
-    return paymentMethods;
 }

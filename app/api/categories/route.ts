@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { CategoryObj } from "@/app/manage/categories/categoryHelpers";
 import prisma from "@/app/lib/db";
 import { getUserId } from "@/app/helpers/getUserId";
+import { getCategories } from "@/app/helpers/prisma/getCategories";
 
 
 export async function POST(req: Request) {
@@ -32,26 +32,4 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({success: false, message: "Something went wrong."}, { status: 500 });
-}
-
-export async function getCategories() {
-    const userId = getUserId();
-    const categories: CategoryObj[] = await prisma.category.findMany({ 
-        where: { userId: userId },
-        select: {
-            id: true,
-            name: true,
-            parentCategoryId: true
-        },
-        orderBy: [
-            {
-                parentCategoryId: 'asc',
-            },
-            {
-                name: 'asc',
-            },
-        ],
-    });
-
-    return categories;
 }

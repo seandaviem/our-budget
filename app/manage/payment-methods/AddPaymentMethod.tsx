@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Dispatch, SetStateAction } from "react";
 import { PaymentMethodsSorted, sortPaymentMethods } from "./paymentMethodHelpers";
-import { ActivityTypes } from "@/app/helpers/getGlobalActivityTypes";
+import { ActivityTypes } from "@/app/helpers/prisma/getGlobalActivityTypes";
 import AddButton from "@/app/components/AddButton";
 
 interface AddPaymentMethodProps {

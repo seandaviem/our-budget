@@ -1,7 +1,6 @@
-import prisma from "@/app/lib/db";
 import { getUserId } from "@/app/helpers/getUserId";
 import CategoryListing from "./CategoryListing";
-import { getCategories } from "@/app/api/categories/route";
+import { getCategories } from "@/app/helpers/prisma/getCategories";
 import { sortCategories } from "./categoryHelpers";
 
 
