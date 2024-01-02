@@ -2,7 +2,7 @@ import { SignedIn, SignedOut, SignInButton, UserButton, OrganizationSwitcher } f
 
 export default function Header() {
     return (
-        <header className="flex justify-between items-center px-8 py-4">
+        <header className="xs:flex justify-between items-center px-8 py-4">
             <div className="logo">
                 <h1 className="text-3xl text-white">My Budget</h1>
             </div>
