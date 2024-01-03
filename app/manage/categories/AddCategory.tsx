@@ -13,8 +13,11 @@ interface AddCategoryProps {
 export default function AddCategory({parentId, setCategories}: AddCategoryProps) {
 
     const [category, setCategory] = useState("");
+    const [isAdding, setIsAdding] = useState(false);
 
     function handleAddCategory() {
+
+        setIsAdding(true);
 
         const postCategory = async () => {
             const body = {
@@ -44,6 +47,8 @@ export default function AddCategory({parentId, setCategories}: AddCategoryProps)
                 setCategories(updatedCategories);
                 setCategory('');
             }
+
+            setIsAdding(false);
         });
 
     }
@@ -52,7 +57,7 @@ export default function AddCategory({parentId, setCategories}: AddCategoryProps)
         <div className="flex items-center">
             <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Sub-Category Name"  value={category} onChange={(e) => setCategory(e.target.value)} />
 
-            <AddButton handleAdd={handleAddCategory} />
+            <AddButton isAdding={isAdding} handleAdd={handleAddCategory} />
         </div>
     )
 }

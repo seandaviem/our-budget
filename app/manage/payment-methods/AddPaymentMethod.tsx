@@ -16,10 +16,13 @@ export default function AddPaymentMethod({activityTypeId, setPaymentMethods, act
 
     const [paymentMethod, setPaymentMethod] = useState("");
     const [activityId, setActivityId] = useState<number>(activityTypeId || 1);
+    const [isAdding, setIsAdding] = useState(false);
 
     function handleAddPaymentMethod() {
 
         const postPaymentMethod = async () => {
+            setIsAdding(true);
+
             const body = {
                 name: paymentMethod,
                 activityTypeId: activityId
@@ -47,6 +50,8 @@ export default function AddPaymentMethod({activityTypeId, setPaymentMethods, act
                 setPaymentMethods(updatedCategories);
                 setPaymentMethod('');
             }
+
+            setIsAdding(false);
         });
 
     }
@@ -65,7 +70,7 @@ export default function AddPaymentMethod({activityTypeId, setPaymentMethods, act
             }
             <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Payment Method Name"  value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} />
 
-            <AddButton handleAdd={handleAddPaymentMethod} />
+            <AddButton isAdding={isAdding} handleAdd={handleAddPaymentMethod} />
         </div>
     )
 }
