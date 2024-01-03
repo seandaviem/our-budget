@@ -1,6 +1,8 @@
-import { SignedIn, SignedOut, SignInButton, UserButton, OrganizationSwitcher } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import SignedInNav from "@/components/SignedInNav";
 
 export default function Header() {
+
     return (
         <header className="xs:flex justify-between items-center px-8 py-4">
             <div className="logo">
@@ -8,20 +10,7 @@ export default function Header() {
             </div>
             <nav>
                 <SignedIn>
-                    <div className="flex space-x-4">
-                        <OrganizationSwitcher 
-                            afterCreateOrganizationUrl='/'
-                            afterSelectOrganizationUrl='/'
-                            afterSelectPersonalUrl='/'
-                            appearance={{
-                                elements: {
-                                    organizationPreviewMainIdentifier: 'text-white',
-                                    organizationSwitcherTriggerIcon: 'text-white'
-                                }
-                            }}
-                        />
-                        <UserButton />
-                    </div>
+                    <SignedInNav />
                 </SignedIn>
                 <SignedOut>
                     <SignInButton />
