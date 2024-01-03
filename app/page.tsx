@@ -1,14 +1,23 @@
-import Image from 'next/image'
-import { auth } from '@clerk/nextjs';
-import { getUserId } from '../helpers/getUserId';
+import Link from "next/link"
 
 export default function Home() {
 
-    const authObj = auth()
-
     return (
-        <main>
-            <pre>{JSON.stringify(authObj, null, 2)}</pre>
+        <main className="container mx-auto">
+            <ul className="text-white">
+                <li>
+                    <Link href="/">Home</Link>
+                </li>
+                <li>
+                    <Link href="/activities/add-activity">Add Activity</Link>
+                </li>
+                <li>
+                    <Link href="/manage/categories">Manage Categories</Link>
+                </li>
+                <li>
+                    <Link href="/manage/payment-methods">Manage Payment Methods</Link>
+                </li>
+            </ul>
         </main>
-    )
+    );
 }
