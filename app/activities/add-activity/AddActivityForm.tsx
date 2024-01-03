@@ -6,6 +6,8 @@ import { ActivityTypes } from "@/helpers/prisma/getGlobalActivityTypes";
 import { CategoriesSorted } from "@/app/manage/categories/categoryHelpers";
 import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
 import { addActivity } from "@/app/actions/addActivity";
+import toast from "react-hot-toast";
+import SubmitButton from "@/components/SubmitButton";
 
 interface AddActivityFormProps {
     activityOptions: ActivityTypes[];
@@ -17,7 +19,7 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
 
     const currentDate = getCurrentDate();
 
-    const [ formData, setFormData ] = useState({
+    const defaultFormInputs = {
         activityType: (activityOptions[1].id).toString(),
         category: '',
         name: '',
@@ -25,11 +27,12 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
         paymentMethod: '',
         date: currentDate,
         description: ''
-    });
+    }
+    const [ formInputs, setFormInputs ] = useState(defaultFormInputs);
 
     function handleFormChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-        setFormData({
-            ...formData,
+        setFormInputs({
+            ...formInputs,
             [event.target.name]: event.target.value
         });
     }
@@ -46,7 +49,19 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
     });
 
     return (
-        <form action={addActivity} className="px-4">
+        <form action={async (formData: FormData) => {
+            setFormInputs(defaultFormInputs);
+
+            const result = await addActivity(formData);
+            
+            if (result?.error) {
+                toast.error(result.error);
+            } else {
+                toast.success("Activity has been added!");
+            }
+        }}
+            className="px-4"
+        >
             <div className="mb-5">
                 <label htmlFor="activity-type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Activity Type</label>
                 <select 
@@ -54,7 +69,7 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
                     name="activityType"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
-                    value={formData.activityType}
+                    value={formInputs.activityType}
                     onChange={(e) => handleFormChange(e)}
                 >
                     {activityOptions.length > 0 && activityOptions.map((option) => <option key={option.id} value={(option.id).toString()}>{option.name}</option>)}
@@ -67,7 +82,7 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
                     name="category"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
-                    value={formData.category}
+                    value={formInputs.category}
                     onChange={(e) => handleFormChange(e)}
                 >
                     <option value="" disabled>Select a Category</option>
@@ -85,7 +100,7 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Acitivty Name"
                     required
-                    value={formData.name}
+                    value={formInputs.name}
                     onChange={(e) => handleFormChange(e)}
                 />
             </div>
@@ -102,7 +117,7 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="0.00"
                     required
-                    value={formData.amount}
+                    value={formInputs.amount}
                     onChange={(e) => handleFormChange(e)}
                 />
             </div>
@@ -113,11 +128,11 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
                     name="paymentMethod"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
-                    value={formData.paymentMethod}
+                    value={formInputs.paymentMethod}
                     onChange={(e) => handleFormChange(e)}
                 >
                     {paymentMethodOptions.length > 0 && paymentMethodOptions.map((option) => {
-                        return (option.activityType.id === parseInt(formData.activityType) 
+                        return (option.activityType.id === parseInt(formInputs.activityType) 
                             ? <option key={option.id} value={(option.id).toString()}>{option.name}</option>
                             : ''
                         )
@@ -134,7 +149,7 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
                     name="date"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
-                    value={formData.date}
+                    value={formInputs.date}
                     onChange={(e) => handleFormChange(e)}
                 />
             </div>
@@ -148,18 +163,13 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Optional: Write some notes about what this activity was for..."
                     rows={3}
-                    value={formData.description}
+                    value={formInputs.description}
                     onChange={(e) => handleFormChange(e)}
                 >
                 </textarea>
             </div>
 
-            <button
-                type="submit"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-                Submit
-            </button>
+            <SubmitButton />
         </form>
     );
 }
