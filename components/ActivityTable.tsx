@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Dispatch, SetStateAction } from "react";
 import { ActivitiesObj } from "@/helpers/prisma/getActivities";
+import { getFormattedDate } from "@/helpers/getDate";
 
 interface ActivityTableProps {
     activities: ActivitiesObj[];
@@ -63,7 +64,7 @@ function FullActivityTable({ activities, setSelectedActivity }: FullActivityTabl
                         return (
                             <tr key={activity.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {activity.date.toLocaleDateString()}
+                                    {getFormattedDate(activity.date)}
                                 </th>
                                 <td className="px-6 py-4">
                                     {activity.title}

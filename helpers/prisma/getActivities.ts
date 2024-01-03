@@ -30,9 +30,14 @@ export async function getActivities(limit = -1, startDate = '', endDate = ''): P
             category: true,
             paymentMethod: true
         },
-        orderBy: {
-            date: 'desc',
-        }
+        orderBy: [
+            {
+                date: 'desc',
+            },
+            {
+                id: 'desc'
+            }
+        ]
     }
 
     if (limit > 0) {
