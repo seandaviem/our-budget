@@ -68,7 +68,7 @@ function FullActivityTable({ activities, setSelectedActivity }: FullActivityTabl
                                 <td className="px-6 py-4">
                                     {activity.title}
                                 </td>
-                                <td className="px-6 py-4">
+                                <td className={`px-6 py-4 ${activity.activityType?.name === 'Expense' ? 'text-red-500' : 'text-green-500'}`}>
                                     ${activity.amount}
                                 </td>
                                 <td className="px-6 py-4">
