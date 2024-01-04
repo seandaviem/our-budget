@@ -2,6 +2,12 @@ import PaymentMethodsListing from "./PaymentMethodsListing";
 import { getPaymentMethods } from "@/helpers/prisma/getPaymentMethods";
 import { sortPaymentMethods } from "./paymentMethodHelpers";
 import { getGlobalActivityTypes } from "@/helpers/prisma/getGlobalActivityTypes";
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: 'Manage Payment Methods | Our Budget',
+    description: 'Add and remove payment methods to your budget portal',
+}
 
 
 export default async function ManagePaymentMethods() {

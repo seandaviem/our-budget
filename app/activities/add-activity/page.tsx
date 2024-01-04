@@ -6,6 +6,12 @@ import AddActivityForm from "./AddActivityForm";
 import { sortCategories } from "@/app/manage/categories/categoryHelpers";
 import { Toaster } from "react-hot-toast";
 import ActivityTable from "@/components/ActivityTable";
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: 'Add Activity | Our Budget',
+    description: 'Add an activity to your list.',
+}
 
 export default async function AddActivity() {
 
