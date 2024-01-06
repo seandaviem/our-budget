@@ -12,6 +12,9 @@ export default function Home() {
                     <Link href="/activities/add-activity">Add Activity</Link>
                 </li>
                 <li>
+                    <Link href="/activities">View All Activity</Link>
+                </li>
+                <li>
                     <Link href="/manage/categories">Manage Categories</Link>
                 </li>
                 <li>
