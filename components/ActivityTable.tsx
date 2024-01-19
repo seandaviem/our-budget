@@ -8,6 +8,9 @@ import { CategoriesSorted } from "@/app/manage/categories/categoryHelpers";
 import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
 import { getCategorySelectOptions, getPaymentMethodSelectOptions } from "@/app/activities/add-activity/AddActivityForm";
 import { useForm } from "@/helpers/hooks/useForm";
+import { updateActivity } from "@/app/actions/updateActivity";
+import { deleteActivity } from "@/app/actions/deleteActivity";
+import toast from "react-hot-toast";
 
 interface ActivityTableProps {
     activities: ActivitiesObj[];
@@ -116,7 +119,7 @@ function SingleActivityTable({ activity, categoryOptions, paymentMethodOptions, 
         name: activity.title || '',
         amount: activity.amount.toString(),
         paymentMethod: activity.paymentMethod?.id?.toString() || '',
-        date: activity.date.toLocaleDateString(),
+        date: getFormattedDate(activity.date),
         description: activity.description || ''
     }
     const { fields, updateForm, resetForm } = useForm(defaultFormInputs);
@@ -129,13 +132,40 @@ function SingleActivityTable({ activity, categoryOptions, paymentMethodOptions, 
 
     const paymentMethodSelectOptions = getPaymentMethodSelectOptions(paymentMethodOptions, activity.activityType?.id || -1);
 
+    const updateActivityWithData = updateActivity.bind(null, activity.id, fields);
+    const deleteActivityById = deleteActivity.bind(null, activity.id);
 
-    function handleSaveChanges() {
 
+    async function handleSaveChanges() {
+
+        const result = await updateActivityWithData();
+
+        if (result?.error) {
+            toast.error(result.error);
+        } else {
+            toast.success("Activity has been updated!");
+        }
+
+        setIsEditing(false);
+        resetForm(defaultFormInputs);
+        setSelectedActivity(null);
     }
 
-    function handleDelete() {
+    async function handleDelete() {
 
+        if (confirm("Are you sure you want to delete this activity?")) {
+            const result = await deleteActivityById();
+
+            if (result?.error) {
+                toast.error(result.error);
+            } else {
+                toast.success("Activity has been deleted!");
+            }
+
+            setIsEditing(false);
+            resetForm(defaultFormInputs);
+            setSelectedActivity(null);
+        }
     }
 
     function handleCancel() {
@@ -257,7 +287,7 @@ function SingleActivityTable({ activity, categoryOptions, paymentMethodOptions, 
                                         name="date"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                         required
-                                        value={new Date(fields.date).toISOString().slice(0, 10)}
+                                        value={new Date(fields.date).toISOString().split('T')[0]}
                                         onChange={(e) => updateForm(e)}
                                     />
                                     ) : (
