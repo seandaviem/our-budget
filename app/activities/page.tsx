@@ -2,6 +2,10 @@ import { getActivities } from "@/helpers/prisma/getActivities";
 import ActivityTable from "@/components/ActivityTable";
 import { Metadata } from "next"
 import Link from "next/link";
+import { getCategories } from "@/helpers/prisma/getCategories";
+import { getGlobalActivityTypes } from "@/helpers/prisma/getGlobalActivityTypes";
+import { getPaymentMethods } from "@/helpers/prisma/getPaymentMethods";
+import { sortCategories } from "../manage/categories/categoryHelpers";
 
 export const metadata: Metadata = {
     title: 'Activities | Our Budget',
@@ -10,6 +14,10 @@ export const metadata: Metadata = {
 
 export default async function AddActivity() {
 
+    const activityTypeOptions = await getGlobalActivityTypes();
+    const categoryOptions = await getCategories();
+    const sortedCategoryOptions = sortCategories(categoryOptions);
+    const paymentMethodOptions = await getPaymentMethods();
     const activities = await getActivities();
 
     return (
@@ -23,7 +31,7 @@ export default async function AddActivity() {
                         </svg>
                     </Link>
                     <p>Activity:</p>
-                    <ActivityTable activities={activities} />
+                    <ActivityTable activities={activities} categoryOptions={sortedCategoryOptions} paymentMethodOptions={paymentMethodOptions} />
                 </div>
             </main>
         </>
