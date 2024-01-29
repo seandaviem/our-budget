@@ -58,7 +58,8 @@ function FullActivityTable({ activities, setSelectedActivity }: FullActivityTabl
     const priceColorOptions: {[key: string] : string} = {
         'expense': 'text-red-500',
         'income': 'text-green-500',
-        'reimbursement': 'text-orange-500'
+        'reimbursement': 'text-orange-500',
+        'big expense': 'text-red-900'
     };
 
     return(
