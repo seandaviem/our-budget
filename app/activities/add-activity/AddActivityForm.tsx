@@ -76,7 +76,7 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
             </div>
             <div className="mb-5">
                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Acitivty Name
+                    Activity Name
                 </label>
                 <input
                     type="text"

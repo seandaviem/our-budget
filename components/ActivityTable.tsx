@@ -55,6 +55,12 @@ export default function ActivityTable({ activities, categoryOptions, paymentMeth
 
 function FullActivityTable({ activities, setSelectedActivity }: FullActivityTableProps) {
 
+    const priceColorOptions: {[key: string] : string} = {
+        'expense': 'text-red-500',
+        'income': 'text-green-500',
+        'reimbursement': 'text-orange-500'
+    };
+
     return(
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -79,6 +85,9 @@ function FullActivityTable({ activities, setSelectedActivity }: FullActivityTabl
                 </thead>
                 <tbody>
                     {activities.length > 0 && activities.map(activity => {
+
+                        const priceColor = activity.activityType?.name ? priceColorOptions[activity.activityType?.name.toLowerCase()] : '';
+
                         return (
                             <tr key={activity.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -87,7 +96,7 @@ function FullActivityTable({ activities, setSelectedActivity }: FullActivityTabl
                                 <td className="px-6 py-4">
                                     {activity.title}
                                 </td>
-                                <td className={`px-6 py-4 ${activity.activityType?.name === 'Expense' ? 'text-red-500' : 'text-green-500'}`}>
+                                <td className={`px-6 py-4 ${priceColor}`}>
                                     ${activity.amount}
                                 </td>
                                 <td className="px-6 py-4">
