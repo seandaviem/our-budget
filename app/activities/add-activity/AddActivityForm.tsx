@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import { getCurrentDate } from "@/helpers/getCurrentDate";
+import { getFormattedDate } from "@/helpers/getDate";
 import { ActivityTypes } from "@/helpers/prisma/getGlobalActivityTypes";
 import { CategoriesSorted } from "@/app/manage/categories/categoryHelpers";
 import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
@@ -17,7 +17,7 @@ interface AddActivityFormProps {
 
 export default function AddActivityForm({activityOptions, categoryOptions, paymentMethodOptions}: AddActivityFormProps) {
 
-    const currentDate = getCurrentDate();
+    const currentDate = new Date(getFormattedDate()).toISOString().split('T')[0];
 
     const defaultFormInputs = {
         activityType: (activityOptions[1].id).toString(),
