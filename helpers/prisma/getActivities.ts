@@ -40,6 +40,13 @@ export async function getActivities(limit = -1, startDate = '', endDate = ''): P
         ]
     }
 
+    if (startDate && endDate) {
+        activityQuery["where"]["date"] = {
+            gte: new Date(startDate),
+            lte: new Date(endDate)
+        }
+    }
+
     if (limit > 0) {
         activityQuery["take"] = limit;
     }

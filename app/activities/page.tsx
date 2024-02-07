@@ -1,4 +1,4 @@
-import { getActivities } from "@/helpers/prisma/getActivities";
+import { ActivitiesObj, getActivities } from "@/helpers/prisma/getActivities";
 import ActivityTable from "@/components/ActivityTable";
 import { Metadata } from "next"
 import Link from "next/link";
@@ -6,19 +6,30 @@ import { getCategories } from "@/helpers/prisma/getCategories";
 import { getGlobalActivityTypes } from "@/helpers/prisma/getGlobalActivityTypes";
 import { getPaymentMethods } from "@/helpers/prisma/getPaymentMethods";
 import { sortCategories } from "../manage/categories/categoryHelpers";
+import DateRangeToggle from "@/components/DateRangeToggle";
+import { getDateRangeObj } from "@/helpers/getDateRangeObj";
 
 export const metadata: Metadata = {
     title: 'Activities | Our Budget',
     description: 'View activities in your current portal.',
 }
 
-export default async function AddActivity() {
+export default async function Activities({ searchParams}: { searchParams: { [key: string]: string | string[] | undefined } }) {
+
+    const dateRangeObj = getDateRangeObj(searchParams);
 
     const activityTypeOptions = await getGlobalActivityTypes();
     const categoryOptions = await getCategories();
     const sortedCategoryOptions = sortCategories(categoryOptions);
     const paymentMethodOptions = await getPaymentMethods();
-    const activities = await getActivities();
+    
+    let activities: ActivitiesObj[];
+    if (dateRangeObj.hasRangeParams) {
+        activities = await getActivities(-1, dateRangeObj.startDate, dateRangeObj.endDate);
+    } else {
+        activities = await getActivities();
+    }
+
 
     return (
         <>
@@ -30,7 +41,8 @@ export default async function AddActivity() {
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                         </svg>
                     </Link>
-                    <p>Activity:</p>
+                    <div className="my-5"><DateRangeToggle dateRangeObj={dateRangeObj} /></div> 
+                    <p className="mb-3">Activity:</p> 
                     <ActivityTable activities={activities} categoryOptions={sortedCategoryOptions} paymentMethodOptions={paymentMethodOptions} />
                 </div>
             </main>
