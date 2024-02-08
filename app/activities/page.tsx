@@ -22,13 +22,7 @@ export default async function Activities({ searchParams}: { searchParams: { [key
     const categoryOptions = await getCategories();
     const sortedCategoryOptions = sortCategories(categoryOptions);
     const paymentMethodOptions = await getPaymentMethods();
-    
-    let activities: ActivitiesObj[];
-    if (dateRangeObj.hasRangeParams) {
-        activities = await getActivities(-1, dateRangeObj.startDate, dateRangeObj.endDate);
-    } else {
-        activities = await getActivities();
-    }
+    const activities = await getActivities(-1, dateRangeObj);
 
 
     return (
