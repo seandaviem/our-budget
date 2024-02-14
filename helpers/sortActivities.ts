@@ -1,6 +1,6 @@
 import { ActivitiesObj } from "./prisma/getActivities";
 
-interface SortedActivitiesObj {
+export interface SortedActivitiesObj {
     [activityTypeId: number]: {
         name: string;
         total: number;
@@ -27,11 +27,11 @@ export function sortActivities(activities: ActivitiesObj[]): SortedActivitiesObj
         if (!sortedActivities[activityTypeId]) {
             sortedActivities[activityTypeId] = {
                 name: activity.activityType?.name || 'Uncategorized',
-                total: activity.amount,
+                total: parseFloat(activity.amount.toFixed(2)),
                 categories: {}
             }
         } else {
-            sortedActivities[activityTypeId].total += activity.amount;
+            sortedActivities[activityTypeId].total = parseFloat(sortedActivities[activityTypeId].total.toFixed(2)) + parseFloat(activity.amount.toFixed(2));
         }
 
         const activityType = sortedActivities[activityTypeId];
@@ -40,11 +40,11 @@ export function sortActivities(activities: ActivitiesObj[]): SortedActivitiesObj
             activityType.categories[categoryId] = {
                 name: activity.category?.name || 'Uncategorized',
                 parentCategoryId: activity.category?.parentCategoryId || null,
-                total: activity.amount,
+                total: parseFloat(activity.amount.toFixed(2)),
                 activities: [activity]
             }
         } else {
-            activityType.categories[categoryId].total += activity.amount;
+            activityType.categories[categoryId].total = parseFloat(activityType.categories[categoryId].total.toFixed(2)) +  parseFloat(activity.amount.toFixed(2));
             activityType.categories[categoryId].activities.push(activity);
         }
 
