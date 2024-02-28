@@ -22,7 +22,7 @@ export default async function Dashboard({ searchParams}: { searchParams: { [key:
     const expenses = sortedActivities["2"].total - sortedActivities["3"].total;
     const savings = income - expenses;
 
-    const sortedExpenseCategories = sortExpenseCategories(sortedActivities, 3);
+    const sortedExpenseCategories = sortExpenseCategories(sortedActivities);
 
     for (let i = 0; i < sortedExpenseCategories.length; i++) {
         const key = sortedExpenseCategories[i];
@@ -36,7 +36,7 @@ export default async function Dashboard({ searchParams}: { searchParams: { [key:
         <main className="container mx-auto pb-48">
             <h1 className="text-white">Dashboard</h1>
             <DateRangeToggle dateRangeObj={dateRangeObj} />
-            <div className="flex flex-wrap gap-5 mt-10">
+            <div className="grid auto-rows-fr grid-cols-3 gap-5 my-10">
                 <Card>
                     <h2 className="text-white">Total Income</h2>
                     <p className="text-green-500">{toCurrency(income)}</p>
@@ -49,6 +49,29 @@ export default async function Dashboard({ searchParams}: { searchParams: { [key:
                     <h2 className="text-white">Total Savings</h2>
                     <p className={`${savings <= 0 ? 'text-red-500' : 'text-green-500'}`}>{toCurrency(savings)}</p>
                 </Card>
+            </div>
+            { /* TODO: MOVE TO SEPARATE COMPONENT */ }
+            <h2 className="text-white">Top Spending Categories:</h2>
+            <div className="grid auto-rows-fr grid-cols-3 gap-5">
+                {sortedExpenseCategories.map(key => {
+                    const category = sortedActivities["2"]["categories"][parseInt(key)];
+                    const activities = category.activities.sort((a, b) => b.amount - a.amount).slice(0,3);
+                    return (
+                        <div key={key}>
+                            <h3 className="text-white">{category.name}: {toCurrency(category.total)}</h3>
+                            <Card>
+                                {activities.map((activity, index) => {
+                                    return (
+                                        <div key={activity.id} className="flex justify-between text-white">
+                                            <p>{activity.title}</p>
+                                            <p>{toCurrency(activity.amount)}</p>
+                                        </div>
+                                    );
+                                })}
+                            </Card>
+                        </div>
+                    );
+                })}
             </div>
             <pre className="text-white">{JSON.stringify(sortedActivities, null, 2)}</pre>
         </main>
