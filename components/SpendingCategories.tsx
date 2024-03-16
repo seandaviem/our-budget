@@ -7,14 +7,14 @@ export default function SpendingCategories({ sortedExpenseCategories, sortedActi
     const expenseCategories = limit > -1 ? sortedExpenseCategories.slice(0, limit) : sortedExpenseCategories;
 
     return (
-        <div className="grid auto-rows-fr grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-3 sm:grid-cols-1 justify-center gap-5">
             {expenseCategories.map(key => {
                 const category = sortedActivities["2"]["categories"][parseInt(key)];
                 const activities = category.activities.sort((a, b) => b.amount - a.amount).slice(0,3);
                 return (
-                    <div key={key}>
-                        <h3 className="text-white">{category.name}: {toCurrency(category.total)}</h3>
-                        <Card>
+                    <div key={key} className="flex flex-col mb-5">
+                        <h3 className="text-white mb-3">{category.name}: {toCurrency(category.total)}</h3>
+                        <Card className="flex-1">
                             {activities.map((activity) => {
                                 return (
                                     <div key={activity.id} className="flex justify-between text-white">

@@ -37,10 +37,10 @@ export default async function Dashboard({ searchParams}: { searchParams: { [key:
 
 
     return (
-        <main className="container mx-auto pb-48">
+        <main className="container mx-auto pb-48 px-8">
             <h1 className="text-white">Dashboard</h1>
             <DateRangeToggle dateRangeObj={dateRangeObj} />
-            <div className="grid auto-rows-fr grid-cols-3 gap-5 my-10">
+            <div className="grid auto-rows-fr sm:grid-cols-3 xs:grid-cols-2 justify-center gap-5 my-10">
                 <Card>
                     <h2 className="text-white">Total Income</h2>
                     <p className="text-green-500">{toCurrency(income)}</p>
@@ -55,7 +55,7 @@ export default async function Dashboard({ searchParams}: { searchParams: { [key:
                 </Card>
             </div>
             { /* TODO: MOVE TO SEPARATE COMPONENT */ }
-            <h2 className="text-white">Top Spending Categories:</h2>
+            <h2 className="text-white mb-3">Top Spending Categories:</h2>
             <SpendingCategories 
                 sortedExpenseCategories={sortedExpenseCategories} 
                 sortedActivities={sortedActivities} 
