@@ -6,6 +6,7 @@ import { sortActivities } from "@/helpers/sortActivities";
 import Card from "@/components/Card";
 import { toCurrency } from "@/helpers/toCurrency";
 import { sortExpenseCategories } from "@/helpers/sortExpenseCategories";
+import { getGlobalActivityTypes } from "@/helpers/prisma/getGlobalActivityTypes";
 
 export const metadata: Metadata = {
     title: "Dashboard | Our Budget",
@@ -16,20 +17,22 @@ export default async function Dashboard({ searchParams}: { searchParams: { [key:
 
     const dateRangeObj = getDateRangeObj(searchParams);
     const activities = await getActivities(-1, dateRangeObj);
-
-    const sortedActivities = sortActivities(activities);
+    const globalActivityTypes = await getGlobalActivityTypes();
+    console.log(activities);
+    const sortedActivities = sortActivities(activities, globalActivityTypes);
+    console.log(sortedActivities)
     const income = sortedActivities["1"].total;
     const expenses = sortedActivities["2"].total - sortedActivities["3"].total;
     const savings = income - expenses;
 
     const sortedExpenseCategories = sortExpenseCategories(sortedActivities);
 
-    for (let i = 0; i < sortedExpenseCategories.length; i++) {
-        const key = sortedExpenseCategories[i];
-        const category = sortedActivities["2"]["categories"][parseInt(key)];
+    // for (let i = 0; i < sortedExpenseCategories.length; i++) {
+    //     const key = sortedExpenseCategories[i];
+    //     const category = sortedActivities["2"]["categories"][parseInt(key)];
 
-        console.log(`${category.name}: ${toCurrency(category.total)}`);
-    }
+    //     console.log(`${category.name}: ${toCurrency(category.total)}`);
+    // }
 
 
     return (
