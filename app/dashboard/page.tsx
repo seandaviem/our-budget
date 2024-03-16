@@ -4,6 +4,7 @@ import { getDateRangeObj } from "@/helpers/getDateRangeObj";
 import { getActivities } from "@/helpers/prisma/getActivities";
 import { sortActivities } from "@/helpers/sortActivities";
 import Card from "@/components/Card";
+import SpendingCategories from "@/components/SpendingCategories";
 import { toCurrency } from "@/helpers/toCurrency";
 import { sortExpenseCategories } from "@/helpers/sortExpenseCategories";
 import { getGlobalActivityTypes } from "@/helpers/prisma/getGlobalActivityTypes";
@@ -18,9 +19,9 @@ export default async function Dashboard({ searchParams}: { searchParams: { [key:
     const dateRangeObj = getDateRangeObj(searchParams);
     const activities = await getActivities(-1, dateRangeObj);
     const globalActivityTypes = await getGlobalActivityTypes();
-    console.log(activities);
+    
     const sortedActivities = sortActivities(activities, globalActivityTypes);
-    console.log(sortedActivities)
+    
     const income = sortedActivities["1"].total;
     const expenses = sortedActivities["2"].total - sortedActivities["3"].total;
     const savings = income - expenses;
@@ -55,28 +56,10 @@ export default async function Dashboard({ searchParams}: { searchParams: { [key:
             </div>
             { /* TODO: MOVE TO SEPARATE COMPONENT */ }
             <h2 className="text-white">Top Spending Categories:</h2>
-            <div className="grid auto-rows-fr grid-cols-3 gap-5">
-                {sortedExpenseCategories.map(key => {
-                    const category = sortedActivities["2"]["categories"][parseInt(key)];
-                    const activities = category.activities.sort((a, b) => b.amount - a.amount).slice(0,3);
-                    return (
-                        <div key={key}>
-                            <h3 className="text-white">{category.name}: {toCurrency(category.total)}</h3>
-                            <Card>
-                                {activities.map((activity, index) => {
-                                    return (
-                                        <div key={activity.id} className="flex justify-between text-white">
-                                            <p>{activity.title}</p>
-                                            <p>{toCurrency(activity.amount)}</p>
-                                        </div>
-                                    );
-                                })}
-                            </Card>
-                        </div>
-                    );
-                })}
-            </div>
-            <pre className="text-white">{JSON.stringify(sortedActivities, null, 2)}</pre>
+            <SpendingCategories 
+                sortedExpenseCategories={sortedExpenseCategories} 
+                sortedActivities={sortedActivities} 
+            />
         </main>
     );
 }
