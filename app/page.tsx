@@ -20,6 +20,9 @@ export default function Home() {
                 <li>
                     <Link href="/manage/payment-methods">Manage Payment Methods</Link>
                 </li>
+                <li>
+                    <Link href="/dashboard">Dashboard</Link>
+                </li>
             </ul>
         </main>
     );

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import { getCurrentDate } from "@/helpers/getCurrentDate";
+import { getFormattedDate } from "@/helpers/getDate";
 import { ActivityTypes } from "@/helpers/prisma/getGlobalActivityTypes";
 import { CategoriesSorted } from "@/app/manage/categories/categoryHelpers";
 import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
@@ -17,7 +17,7 @@ interface AddActivityFormProps {
 
 export default function AddActivityForm({activityOptions, categoryOptions, paymentMethodOptions}: AddActivityFormProps) {
 
-    const currentDate = getCurrentDate();
+    const currentDate = new Date(getFormattedDate()).toISOString().split('T')[0];
 
     const defaultFormInputs = {
         activityType: (activityOptions[1].id).toString(),
@@ -48,11 +48,11 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
             className="px-4"
         >
             <div className="mb-5">
-                <label htmlFor="activity-type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Activity Type</label>
+                <label htmlFor="activity-type" className="block mb-2 text-sm font-medium text-white">Select Activity Type</label>
                 <select 
                     id="activity-type"
                     name="activityType"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     required
                     value={fields.activityType}
                     onChange={(e) => updateForm(e)}
@@ -61,11 +61,11 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
                 </select>
             </div>
             <div className="mb-5">
-                <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Category</label>
+                <label htmlFor="category" className="block mb-2 text-sm font-medium text-white">Select Category</label>
                 <select 
                     id="category"
                     name="category"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     required
                     value={fields.category}
                     onChange={(e) => updateForm(e)}
@@ -75,14 +75,14 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
                 </select>
             </div>
             <div className="mb-5">
-                <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <label htmlFor="name" className="block mb-2 text-sm font-medium text-white">
                     Activity Name
                 </label>
                 <input
                     type="text"
                     id="name"
                     name="name"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Acitivty Name"
                     required
                     value={fields.name}
@@ -90,7 +90,7 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
                 />
             </div>
             <div className="mb-5">
-                <label htmlFor="amount" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <label htmlFor="amount" className="block mb-2 text-sm font-medium text-white">
                     Amount
                 </label>
                 <input
@@ -99,7 +99,7 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
                     id="amount"
                     name="amount"
                     pattern="[0-9]+(?:\.[0-9]{0,2})?"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     placeholder="0.00"
                     required
                     value={fields.amount}
@@ -107,11 +107,11 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
                 />
             </div>
             <div className="mb-5">
-                <label htmlFor="payment-method" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Payment Method</label>
+                <label htmlFor="payment-method" className="block mb-2 text-sm font-medium text-white">Select Payment Method</label>
                 <select 
                     id="payment-method"
                     name="paymentMethod"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     required
                     value={fields.paymentMethod}
                     onChange={(e) => updateForm(e)}
@@ -121,27 +121,27 @@ export default function AddActivityForm({activityOptions, categoryOptions, payme
                 </select>
             </div>
             <div className="mb-5">
-                <label htmlFor="date" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <label htmlFor="date" className="block mb-2 text-sm font-medium text-white">
                     Date
                 </label>
                 <input
                     type="date"
                     id="date"
                     name="date"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="border xt-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     required
                     value={fields.date}
                     onChange={(e) => updateForm(e)}
                 />
             </div>
             <div className="mb-5">
-                <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <label htmlFor="description" className="block mb-2 text-sm font-medium text-white">
                     Description
                 </label>
                 <textarea
                     id="description"
                     name="description"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="border xt-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Optional: Write some notes about what this activity was for..."
                     rows={3}
                     value={fields.description}

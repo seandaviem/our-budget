@@ -59,7 +59,7 @@ export default function AddPaymentMethod({activityTypeId, setPaymentMethods, act
     return (
         <div className="flex items-center">
             { (activityTypeId === null && activityTypes.length > 0 ) ? 
-                <select className="mr-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                <select className="mr-3 border text-sm rounded-lg p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
                 value={activityId}
                 onChange={(e) => setActivityId(parseInt(e.target.value))}
                 >
@@ -68,7 +68,7 @@ export default function AddPaymentMethod({activityTypeId, setPaymentMethods, act
             : 
             ""
             }
-            <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Payment Method Name"  value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} />
+            <input type="text" className="border text-sm rounded-lg p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" placeholder="Payment Method Name"  value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} />
 
             <AddButton isAdding={isAdding} handleAdd={handleAddPaymentMethod} />
         </div>
