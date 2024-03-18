@@ -37,7 +37,7 @@ export default async function Dashboard({ searchParams}: { searchParams: { [key:
 
 
     return (
-        <main className="container mx-auto pb-48 px-8">
+        <main className="container mx-auto pb-16 px-8">
             <h1 className="text-white">Dashboard</h1>
             <DateRangeToggle dateRangeObj={dateRangeObj} />
             <div className="grid auto-rows-fr sm:grid-cols-3 xs:grid-cols-2 justify-center gap-5 my-10">
