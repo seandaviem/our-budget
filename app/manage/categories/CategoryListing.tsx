@@ -31,8 +31,8 @@ function CategoryTable({ category, setCategories }: {category: ParentCategoryObj
     return (
         <>
             <div className="relative overflow-x-auto sm:rounded-lg mb-9">
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-400">
+                    <thead className="text-xs uppercase bg-gray-700 text-gray-400">
                         <tr>
                             <th scope="col" className="px-6 py-3">
                                 Parent Category
@@ -47,11 +47,11 @@ function CategoryTable({ category, setCategories }: {category: ParentCategoryObj
                             ? category.children.map((subCat) => (
                                   <tr
                                       key={subCat.id}
-                                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                      className="border-b bg-gray-800 border-gray-700"
                                   >
                                       <th
                                           scope="row"
-                                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                          className="px-6 py-4 font-medium whitespace-nowrap text-white"
                                       >
                                           {category.name}
                                       </th>
@@ -59,20 +59,20 @@ function CategoryTable({ category, setCategories }: {category: ParentCategoryObj
                                   </tr>
                               ))
                             : 
-                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <tr className="border-b bg-gray-800 border-gray-700">
                                 <td
                                     scope="row"
-                                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                    className="px-6 py-4 font-medium whitespace-nowrap text-white"
                                 >
                                    {category.name}
                                 </td>
                                 <td>No Sub-Categories Available.</td>
                             </tr>
                         }
-                        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <tr className="border-b bg-gray-800 border-gray-700">
                             <td
                                 scope="row"
-                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                className="px-6 py-4 font-medium whitespace-nowrap text-white"
                             >
                                 Add {category.name} Sub-Category</td>
                             <td className="px-6 py-4"><AddCategory parentId={category.id} setCategories={setCategories} /></td>

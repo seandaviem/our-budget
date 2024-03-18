@@ -15,9 +15,8 @@ export default function SignedInNav() {
                 afterSelectPersonalUrl={pathname}
                 appearance={{
                     elements: {
-                        organizationPreviewMainIdentifier: 'text-white',
-                        organizationSwitcherTriggerIcon: 'text-white',
-                        userPreviewMainIdentifier: 'text-white'
+                        organizationSwitcherTrigger: 'text-white',
+                        organizationSwitcherTriggerIcon: 'text-white'
                     }
                 }}
             />
