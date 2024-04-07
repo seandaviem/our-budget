@@ -13,6 +13,9 @@ export async function getCategories() {
         },
         orderBy: [
             {
+                id: 'asc',
+            },
+            {
                 parentCategoryId: 'asc',
             },
             {
