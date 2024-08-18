@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import '@mantine/core/styles.css'
+import { ColorSchemeScript, MantineProvider } from '@mantine/core'
 import { ClerkProvider } from '@clerk/nextjs'
 import Header from '../partials/Header'
 import { archivo, openSans } from '../helpers/fonts'
@@ -22,10 +24,15 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
+            <head>
+                <ColorSchemeScript />
+            </head>
             <ClerkProvider>
                 <body className={`${archivo.variable} ${openSans.variable} bg-gray-900`}> 
-                    <Header />     
-                    {children}
+                    <MantineProvider>
+                        <Header />     
+                        {children}
+                    </MantineProvider>
                 </body>
             </ClerkProvider>
         </html>
