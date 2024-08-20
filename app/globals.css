@@ -32,3 +32,12 @@ h6 {
 body {
   font-family: var(--font-open-sans);
 }
+
+.btn {
+  @apply inline-flex items-center px-5 py-2.5 text-sm font-medium text-center rounded-lg focus:ring-4 focus:outline-none no-underline;
+}
+
+.btn-primary,
+.btn-blue {
+  @apply text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-800
+}

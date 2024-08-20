@@ -13,9 +13,11 @@
   "dependencies": {
     "@clerk/nextjs": "^4.29.9",
     "@mantine/core": "^7.12.1",
+    "@mantine/dates": "^7.12.1",
     "@prisma/client": "^5.7.1",
     "@tabler/icons-react": "^3.12.0",
     "chart.js": "^4.4.1",
+    "dayjs": "^1.11.13",
     "next": "^14.0.4",
     "prisma": "^5.7.1",
     "react": "^18.2.0",

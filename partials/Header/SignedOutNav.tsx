@@ -12,7 +12,7 @@ import HeaderLogo from "./HeaderLogo";
 export default function SignedOutNav() {
 
     return (
-        <Box pb={120}>
+        <Box>
             <header className={classes.header}>
                 <Group justify="space-between" h="100%">
                     <HeaderLogo />
