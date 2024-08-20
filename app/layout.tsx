@@ -3,7 +3,7 @@ import './globals.css'
 import '@mantine/core/styles.css'
 import { ColorSchemeScript, MantineProvider } from '@mantine/core'
 import { ClerkProvider } from '@clerk/nextjs'
-import Header from '../partials/Header'
+import Header from '../partials/Header/Header'
 import { archivo, openSans } from '../helpers/fonts'
 
 export const metadata: Metadata = {
@@ -25,11 +25,11 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head>
-                <ColorSchemeScript />
+                <ColorSchemeScript defaultColorScheme='dark' />
             </head>
             <ClerkProvider>
-                <body className={`${archivo.variable} ${openSans.variable} bg-gray-900`}> 
-                    <MantineProvider>
+                <body className={`${archivo.variable} ${openSans.variable}`}> 
+                    <MantineProvider defaultColorScheme='dark'>
                         <Header />     
                         {children}
                     </MantineProvider>
