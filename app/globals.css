@@ -34,10 +34,14 @@ body {
 }
 
 .btn {
-  @apply inline-flex items-center px-5 py-2.5 text-sm font-medium text-center rounded-lg focus:ring-4 focus:outline-none no-underline;
+  @apply inline-flex items-center px-5 py-2.5 text-sm font-medium text-center rounded-lg focus:ring-4 focus:outline-none no-underline border-none hover:cursor-pointer;
 }
 
 .btn-primary,
 .btn-blue {
   @apply text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-800
+}
+
+.btn-red {
+  @apply text-white bg-red-600 hover:bg-red-700 focus:ring-red-800
 }

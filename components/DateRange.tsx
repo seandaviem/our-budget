@@ -3,71 +3,62 @@
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { DateRangeProps } from "@/helpers/getDateRangeObj";
-import { getFormattedDate } from "@/helpers/getDate";
+import { getFormattedDate } from "@/helpers/getFormattedDate";
+import { DatePickerInput } from "@mantine/dates";
+import { IconCalendar } from "@tabler/icons-react";
 
 export default function DateRange({ dateRangeObj }: { dateRangeObj: DateRangeProps }) {
 
-    const currentDate = new Date(getFormattedDate()).toISOString().split('T')[0];
+    const currentDate = new Date(getFormattedDate());
 
     const router = useRouter();
     const pathName = usePathname();
+    const startDate = dateRangeObj.hasRangeParams ? new Date(dateRangeObj.startDate) : null;
+    const endDate = dateRangeObj.hasRangeParams ? new Date(dateRangeObj.endDate) : null;
 
-    const [startDate, setStartDate] = useState(dateRangeObj.startDate);
-    const [endDate, setEndDate] = useState(dateRangeObj.endDate);
-    const hasRangeParams = dateRangeObj.hasRangeParams;
+    const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([startDate, endDate]);
+
+    const icon = <IconCalendar style={{ width: 18, height: 18 }} stroke={1.5} />;
 
     function handleClick() {
 
-        router.push(`${pathName}?startDate=${startDate}&endDate=${endDate}`);
+        router.push(`${pathName}?startDate=${getFormattedDate(dateRange[0], true)}&endDate=${getFormattedDate(dateRange[1], true)}`);
     }
 
+
+    // TODO: Look into this causing two re-renders and if necessary to fix
     function handleClear() {
-        setStartDate(dateRangeObj.startDate);
-        setEndDate(dateRangeObj.endDate);
+        setDateRange([null, null]);
         router.push(`${pathName}`);
     }
 
     return (
         <div className="md:flex items-center">
-            <input
-                type="date"
-                id="start-date"
-                name="startDate"
-                className="md:w-auto w-full border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
-                required
-                max={endDate ? endDate : currentDate}
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-            />
-            <span className="mx-2 text-white">to</span>
-            <input
-                type="date"
-                id="end-date"
-                name="endDate"
-                className="md:w-auto w-full border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white"
-                required
-                min={startDate ? startDate : undefined}
-                max={currentDate}
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+            <DatePickerInput
+                type="range"
+                id="date-range"
+                name="dateRange"
+                placeholder="Select Date Range"
+                leftSection={icon}
+                leftSectionPointerEvents="none"
+                maxDate={currentDate}
+                value={dateRange}
+                onChange={setDateRange}
             />
             <div className="flex gap-3 md:my-0 my-3">
                 <button
-                    className="focus:ring-4 font-medium rounded-lg text-sm md:ms-3 px-5 py-2.5 text-white bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
+                    className="btn btn-primary md:ms-3"
                     onClick={handleClick}
                 >
                     Apply
                 </button>
                 <button
-                    className="focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-white bg-red-600 hover:bg-red-700 focus:ring-red-800"
+                    className="btn btn-red"
                     onClick={handleClear}
                 >
                     Clear
                 </button>
             </div>
-            <p className="md:ms-3 text-sm font-medium text-white">
-                Current Date Range: { hasRangeParams ? `${startDate} to ${endDate}` : 'All Activities' }
-            </p>
         </div>
     );
 }

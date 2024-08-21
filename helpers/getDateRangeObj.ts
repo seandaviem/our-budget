@@ -1,4 +1,4 @@
-import { getFormattedDate } from "./getDate";
+import { getFormattedDate } from "./getFormattedDate";
 
 export interface DateRangeProps {
     startDate: string;
@@ -21,8 +21,8 @@ export function getDateRangeObj( searchParams: { [key: string]: string | string[
         }
     }
 
-    const startDate = (searchParams.startDate && hasValidDates) ? searchParams.startDate.toString() : new Date(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-01`).toISOString().split('T')[0];
-    const endDate = (searchParams.endDate && hasValidDates) ? searchParams.endDate.toString() : new Date(currentDate).toISOString().split('T')[0];
+    const startDate = (searchParams.startDate && hasValidDates) ? searchParams.startDate.toString() : getFormattedDate(new Date(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-01`), true);
+    const endDate = (searchParams.endDate && hasValidDates) ? searchParams.endDate.toString() : getFormattedDate(currentDate, true);
 
     return {
         startDate,

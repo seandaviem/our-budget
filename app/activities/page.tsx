@@ -1,9 +1,8 @@
-import { ActivitiesObj, getActivities } from "@/helpers/prisma/getActivities";
+import { getActivities } from "@/helpers/prisma/getActivities";
 import ActivityTable from "@/components/ActivityTable";
 import { Metadata } from "next"
 import Link from "next/link";
 import { getCategories } from "@/helpers/prisma/getCategories";
-import { getGlobalActivityTypes } from "@/helpers/prisma/getGlobalActivityTypes";
 import { getPaymentMethods } from "@/helpers/prisma/getPaymentMethods";
 import { sortCategories } from "../manage/categories/categoryHelpers";
 import DateRangeToggle from "@/components/DateRangeToggle";
@@ -18,7 +17,6 @@ export default async function Activities({ searchParams}: { searchParams: { [key
 
     const dateRangeObj = getDateRangeObj(searchParams);
 
-    const activityTypeOptions = await getGlobalActivityTypes();
     const categoryOptions = await getCategories();
     const sortedCategoryOptions = sortCategories(categoryOptions);
     const paymentMethodOptions = await getPaymentMethods();
@@ -27,7 +25,7 @@ export default async function Activities({ searchParams}: { searchParams: { [key
 
     return (
         <>
-            <main className="container mx-auto pb-48">
+            <main className="container mx-auto pb-48 max-sm:px-5">
                 <div className="text-white mt-10">
                     <Link href="/activities/add-activity" className="btn btn-primary mb-3">
                         Add Activity

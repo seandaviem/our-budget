@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import { getFormattedDate } from "@/helpers/getDate";
+import { getFormattedDate } from "@/helpers/getFormattedDate";
 import { ActivityTypes } from "@/helpers/prisma/getGlobalActivityTypes";
 import { CategoriesSorted } from "@/app/manage/categories/categoryHelpers";
 import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";

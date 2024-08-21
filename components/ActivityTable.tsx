@@ -3,7 +3,7 @@
 import { ReactNode, useState } from "react";
 import { Dispatch, SetStateAction } from "react";
 import { ActivitiesObj } from "@/helpers/prisma/getActivities";
-import { getFormattedDate } from "@/helpers/getDate";
+import { getFormattedDate } from "@/helpers/getFormattedDate";
 import { CategoriesSorted } from "@/app/manage/categories/categoryHelpers";
 import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
 import { getCategorySelectOptions, getPaymentMethodSelectOptions } from "@/app/activities/add-activity/AddActivityForm";
