@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { Dispatch, SetStateAction } from "react";
 import { ActivitiesObj } from "@/helpers/prisma/getActivities";
 import { getFormattedDate } from "@/helpers/getFormattedDate";
@@ -11,6 +11,8 @@ import { useForm } from "@/helpers/hooks/useForm";
 import { updateActivity } from "@/app/actions/updateActivity";
 import { deleteActivity } from "@/app/actions/deleteActivity";
 import toast from "react-hot-toast";
+import SortedTable, { RowData, TableCol } from "./SortedTable/SortedTable";
+import { TableTd, TableTr, UnstyledButton } from "@mantine/core";
 
 interface ActivityTableProps {
     activities: ActivitiesObj[];
@@ -55,6 +57,8 @@ export default function ActivityTable({ activities, categoryOptions, paymentMeth
 
 function FullActivityTable({ activities, setSelectedActivity }: FullActivityTableProps) {
 
+    console.log("rerendered");
+
     const priceColorOptions: {[key: string] : string} = {
         'expense': 'text-red-500',
         'income': 'text-green-500',
@@ -62,62 +66,50 @@ function FullActivityTable({ activities, setSelectedActivity }: FullActivityTabl
         'big expense': 'text-red-900'
     };
 
-    return(
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-400">
-                <thead className="text-xs uppercase bg-gray-700 text-gray-400">
-                    <tr>
-                        <th scope="col" className="px-6 py-3">
-                            Date
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                            Title
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                            Amount
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                            Description
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                            More Details
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {activities.length > 0 && activities.map(activity => {
+    const cols: TableCol[] = [
+        ['date', 'Date', true],
+        ['title', 'Title', true],
+        ['amount', 'Amount', true],
+        ['description', 'Description', false],
+        ['details', 'Additional Info', false]
+    ];
 
-                        const priceColor = activity.activityType?.name ? priceColorOptions[activity.activityType?.name.toLowerCase()] : '';
-
+    const rowFunc = (activities: RowData[]) => {
+        return activities.map((activity) => {
+            const priceColor = activity.activityType?.name ? priceColorOptions[activity.activityType?.name.toLowerCase()] : '';
+            const cells = cols.map((col) => {
+                const [key] = col;
+                switch (key) {
+                    case 'date':
+                        return <TableTd key={`${key}-${activity.id}`}>{getFormattedDate(activity['date'])}</TableTd>;
+                    case 'title':
+                        return <TableTd key={`${key}-${activity.id}`}>{activity['title']}</TableTd>
+                    case 'amount':
+                        return <TableTd key={`${key}-${activity.id}`} className={`${priceColor}`}>{activity['amount']}</TableTd>;
+                    case 'description':
+                        return <TableTd key={`${key}-${activity.id}`}>{activity.description?.split(/\s+/).slice(0, 15).join(' ') + '...' ?? ''}</TableTd>;
+                    case 'details':
                         return (
-                            <tr key={activity.id} className=" odd:bg-gray-900  even:bg-gray-800 border-b border-gray-700">
-                                <th scope="row" className="px-6 py-4 font-medium whitespace-nowrap text-white">
-                                    {getFormattedDate(activity.date)}
-                                </th>
-                                <td className="px-6 py-4">
-                                    {activity.title}
-                                </td>
-                                <td className={`px-6 py-4 ${priceColor}`}>
-                                    ${activity.amount}
-                                </td>
-                                <td className="px-6 py-4">
-                                    {activity.description?.split(/\s+/).slice(0, 15).join(' ') + '...' ?? ''}
-                                </td>
-                                <td className="px-6 py-4">
-                                    <button
-                                        className="font-medium text-blue-500 hover:underline"
-                                        onClick={() => setSelectedActivity(activity)}
-                                    >
-                                        View Details
-                                    </button>
-                                </td>
-                            </tr>
+                            <TableTd key={`${key}-${activity.id}`}>
+                                <UnstyledButton
+                                    className="hover:underline" 
+                                    onClick={() => setSelectedActivity(activity as ActivitiesObj)}>
+                                        More Details
+                                </UnstyledButton>
+                            </TableTd>
                         );
-                    })}
-                </tbody>
-            </table>
-        </div>
-    )
+                    default:
+                        return <TableTd key={`${key}-${activity.id}`}></TableTd>
+
+                }
+            });
+
+            return <TableTr key={`row-${activity.id}`}>{cells}</TableTr>;
+        });
+    }
+
+    return <SortedTable data={activities} cols={cols} overrideRowsFunc={rowFunc} />
+
 }
 
 function SingleActivityTable({ activity, categoryOptions, paymentMethodOptions, setSelectedActivity }: SingleActivityTableProps) {
