@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { toCurrency } from '../toCurrency'
+import { toCurrency } from './toCurrency'
 
 test('toCurrency', () => {
   expect(toCurrency(1234)).toBe('$1,234.00')

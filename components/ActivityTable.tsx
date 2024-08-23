@@ -10,6 +10,7 @@ import SortedTable, { RowData, TableCol } from "./SortedTable/SortedTable";
 import { TableTd, TableTr, UnstyledButton } from "@mantine/core";
 import SingleActivityTable from "./SingleActivityTable";
 import { toCurrency } from "@/helpers/toCurrency";
+import { getExcerpt } from "@/helpers/getExcerpt";
 
 interface ActivityTableProps {
     activities: ActivitiesObj[];
@@ -76,7 +77,7 @@ function FullActivityTable({ activities, setSelectedActivity }: FullActivityTabl
                     case 'amount':
                         return <TableTd key={`${key}-${activity.id}`}><span className={`${priceColor}`}>{toCurrency(activity['amount'])}</span></TableTd>;
                     case 'description':
-                        return <TableTd key={`${key}-${activity.id}`}>{activity.description?.split(/\s+/).slice(0, 15).join(' ') + '...' ?? ''}</TableTd>;
+                        return <TableTd key={`${key}-${activity.id}`}>{getExcerpt(activity['description'], '-')}</TableTd>;
                     case 'details':
                         return (
                             <TableTd key={`${key}-${activity.id}`}>
