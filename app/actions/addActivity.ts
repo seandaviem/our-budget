@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { getUserId } from "@/helpers/getUserId";
 import { getErrorMessage } from "@/helpers/getErrorMessage";
 
+//TODO: Add validation here
 export async function addActivity(formData: FormData) {
     const activityTypeId = formData.get("activityType");
     const categoryId = formData.get("category");

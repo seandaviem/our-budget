@@ -1,6 +1,13 @@
 import { CategoriesSorted } from "@/app/manage/categories/categoryHelpers";
 import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
 import { ComboboxData } from "@mantine/core";
+import { ActivityTypes } from "./prisma/getGlobalActivityTypes";
+
+export function getActivitySelectOptions(activityOptions: ActivityTypes[]): ComboboxData {
+    if (activityOptions.length === 0) return ([{value: "", label: "No Activity Options Available", disabled: true}]);
+
+    return activityOptions.map(option => ({value: option.id.toString(), label: option.name}));
+}
 
 export function getCategorySelectOptions(categoryOptions: CategoriesSorted): ComboboxData {
     return Object.keys(categoryOptions).filter((key) => categoryOptions[parseInt(key)].children.length > 0).map((key: string) => {
