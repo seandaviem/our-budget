@@ -1,12 +1,15 @@
+import { DateValue } from "@mantine/dates";
 import { useState, ChangeEvent, ChangeEventHandler } from "react";
 
 interface FieldsType {
-  [key: string] : string;
+  [key: string] : any;
 }
+
+type UpdateFormType = ({ key, value }: { key: string, value: any }) => void;
 
 interface FormObject {
   fields: FieldsType;
-  updateForm: ChangeEventHandler;
+  updateForm: UpdateFormType;
   resetForm: Function;
 }
 
@@ -17,10 +20,10 @@ export function useForm(
 
   return {
     fields: fields,
-    updateForm: function (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+    updateForm: function ({key, value}: {key: string, value: any}) {
       setFields({
         ...fields,
-        [event.target.name]: event.target.value,
+        [key]: value,
       });
       return;
     },
