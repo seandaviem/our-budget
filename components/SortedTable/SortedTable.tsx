@@ -96,6 +96,7 @@ import {
     });
 
     const rows = overrideRowsFunc !== null ? overrideRowsFunc(sortedData) : sortedData.map((row) => {
+        // TODO: This is going to break if you pass objects and such...
         const cells = cols.map((col) => {
             const [key] = col;
             return <TableTd key={key}>{row[key]}</TableTd>

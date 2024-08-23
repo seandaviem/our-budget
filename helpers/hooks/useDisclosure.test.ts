@@ -1,5 +1,5 @@
 import { renderHook, act } from "@testing-library/react"
-import { useDisclosure } from "../useDisclosure"
+import { useDisclosure } from "./useDisclosure";
 import { afterAll, describe, expect, test, vi } from "vitest"
 
 describe("useDisclosure", () => {
