@@ -6,14 +6,10 @@ import { ActivitiesObj } from "@/helpers/prisma/getActivities";
 import { getFormattedDate } from "@/helpers/getFormattedDate";
 import { CategoriesSorted } from "@/app/manage/categories/categoryHelpers";
 import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
-import { getCategorySelectOptions, getPaymentMethodSelectOptions } from "@/app/activities/add-activity/AddActivityForm";
-import { useForm } from "@/helpers/hooks/useForm";
-import { updateActivity } from "@/app/actions/updateActivity";
-import { deleteActivity } from "@/app/actions/deleteActivity";
-import toast from "react-hot-toast";
 import SortedTable, { RowData, TableCol } from "./SortedTable/SortedTable";
 import { TableTd, TableTr, UnstyledButton } from "@mantine/core";
 import SingleActivityTable from "./SingleActivityTable";
+import { toCurrency } from "@/helpers/toCurrency";
 
 interface ActivityTableProps {
     activities: ActivitiesObj[];
@@ -27,12 +23,6 @@ interface SetStateProp {
 
 interface FullActivityTableProps extends SetStateProp {
     activities: ActivitiesObj[];
-}
-
-interface SingleActivityTableProps extends SetStateProp {
-    activity: ActivitiesObj;
-    categoryOptions: CategoriesSorted;
-    paymentMethodOptions: PaymentMethodObj[];
 }
 
 export default function ActivityTable({ activities, categoryOptions, paymentMethodOptions }: ActivityTableProps) {
@@ -59,10 +49,10 @@ export default function ActivityTable({ activities, categoryOptions, paymentMeth
 function FullActivityTable({ activities, setSelectedActivity }: FullActivityTableProps) {
 
     const priceColorOptions: {[key: string] : string} = {
-        'expense': 'text-red-500',
-        'income': 'text-green-500',
-        'reimbursement': 'text-orange-500',
-        'big expense': 'text-red-900'
+        'expense': 'bg-red-700 bg-fff text-sm font-medium px-2.5 py-0.5 rounded-full',
+        'income': 'bg-green-700 bg-fff text-sm font-medium px-2.5 py-0.5 rounded-full',
+        'reimbursement': 'bg-orange-700 bg-fff text-sm font-medium px-2.5 py-0.5 rounded-full',
+        'big expense': 'bg-red-900 bg-fff text-sm font-medium px-2.5 py-0.5 rounded-full'
     };
 
     const cols: TableCol[] = [
@@ -84,13 +74,14 @@ function FullActivityTable({ activities, setSelectedActivity }: FullActivityTabl
                     case 'title':
                         return <TableTd key={`${key}-${activity.id}`}>{activity['title']}</TableTd>
                     case 'amount':
-                        return <TableTd key={`${key}-${activity.id}`} className={`${priceColor}`}>{activity['amount']}</TableTd>;
+                        return <TableTd key={`${key}-${activity.id}`}><span className={`${priceColor}`}>{toCurrency(activity['amount'])}</span></TableTd>;
                     case 'description':
                         return <TableTd key={`${key}-${activity.id}`}>{activity.description?.split(/\s+/).slice(0, 15).join(' ') + '...' ?? ''}</TableTd>;
                     case 'details':
                         return (
                             <TableTd key={`${key}-${activity.id}`}>
                                 <UnstyledButton
+                                    fz={"sm"}
                                     className="hover:underline" 
                                     onClick={() => setSelectedActivity(activity as ActivitiesObj)}>
                                         More Details

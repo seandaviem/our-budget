@@ -12,7 +12,8 @@ import { updateActivity } from "@/app/actions/updateActivity";
 import { deleteActivity } from "@/app/actions/deleteActivity";
 import toast from "react-hot-toast";
 import { Select, Table, TableTbody, TableTd, TableTh, TableThead, TableTr, Textarea, TextInput, UnstyledButton } from "@mantine/core";
-import { DateInput, DateValue } from "@mantine/dates";
+import { DateInput } from "@mantine/dates";
+import { toCurrency } from "@/helpers/toCurrency";
 
 
 interface SetStateProp {
@@ -44,6 +45,7 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
 
     const paymentMethodSelectOptions = getPaymentMethodSelectOptions(paymentMethodOptions, activity.activityType?.id || -1);
 
+    //TODO: UPDATE DATE
     const updateActivityWithData = updateActivity.bind(null, activity.id, fields);
     const deleteActivityById = deleteActivity.bind(null, activity.id);
 
@@ -93,12 +95,13 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
     return (
         <>
             <UnstyledButton
+                fz={"sm"}
                 className="font-medium text-blue-500 hover:underline"
                 onClick={() => setSelectedActivity(null)}
             >
                 View All Activities
             </UnstyledButton>
-            <div className="activityInfo my-5">
+            <div className="activityInfo">
                 {isEditing ? (
                     <ActivityEditButtons
                         handleSaveChanges={handleSaveChanges}
@@ -106,19 +109,19 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
                         handleCancel={handleCancel}
                     />
                 ) : (
-                    <UnstyledButton
+                    <button
                         type="button"
-                        className="btn btn-primary"
+                        className="btn btn-primary my-5"
                         onClick={() => setIsEditing(true)}
                     >
                         Edit
-                    </UnstyledButton>
+                    </button>
                 )}
-                <Table>
+                <Table className="single-activity-table">
                     <TableThead>
                         <TableTr>
-                            <TableTh>Property</TableTh>
-                            <TableTh>Value</TableTh>
+                            <TableTh className="rounded-tl">Property</TableTh>
+                            <TableTh className="rounded-tr">Value</TableTh>
                         </TableTr>
                     </TableThead>
                     <TableTbody>
@@ -174,7 +177,7 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
                                     />
                                 ) :
                                 (
-                                    fields.amount ?? "$0.00"
+                                    toCurrency(parseFloat(fields.amount)) ?? "$0.00"
                                 )}
                             </TableTd>
                         </TableTr>
@@ -257,7 +260,7 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
 
 function ActivityEditButtons({ handleSaveChanges, handleDelete, handleCancel }: {handleSaveChanges: () => void, handleDelete: () => void, handleCancel: () => void}) {
     return (
-        <>
+        <div className="flex gap-3 my-5">
             <button
                 type="submit"
                 className="btn btn-primary"
@@ -278,6 +281,6 @@ function ActivityEditButtons({ handleSaveChanges, handleDelete, handleCancel }: 
             >
                 Cancel
             </UnstyledButton>
-        </>
+        </div>
     );
 }

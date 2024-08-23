@@ -14,6 +14,7 @@ import {
     TableTd,
     TableTbody,
     TableTrProps,
+    TableThead,
   } from '@mantine/core';
   import { IconSelector, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
   import classes from './SortedTable.module.css';
@@ -107,12 +108,12 @@ import {
 
     return (
         <ScrollArea>
-            <Table horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
-                <TableTbody>
+            <Table className='sorted-table' horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
+                <TableThead>
                     <TableTr>
                         {heads}
                     </TableTr>
-                </TableTbody>
+                </TableThead>
                 <TableTbody>
                     {rows.length > 0 ? (
                         rows

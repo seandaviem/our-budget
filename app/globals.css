@@ -45,3 +45,17 @@ body {
 .btn-red {
   @apply text-white bg-red-600 hover:bg-red-700 focus:ring-red-800
 }
+
+.single-activity-table td,
+.single-activity-table th {
+  @apply py-4
+}
+
+.single-activity-table tbody tr:nth-child(even),
+.sorted-table tbody tr:nth-child(even) {
+  background-color: var(--mantine-color-dark-6);
+}
+.single-activity-table thead,
+.sorted-table thead {
+  background-color: var(--mantine-color-dark-4);
+}
