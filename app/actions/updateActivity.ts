@@ -25,7 +25,7 @@ export async function updateActivity(activityId: number, activityFields: {[key :
         dataFields["paymentMethodId"] = Number(activityFields.paymentMethod);
     }
     if (activityFields.date) {
-        dataFields["date"] = (new Date(activityFields.date as string)).toISOString();
+        dataFields["date"] = (activityFields.date as Date).toISOString();
     }
     if (activityFields.description) {
         dataFields["description"] = String(activityFields.description);

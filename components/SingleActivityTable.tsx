@@ -45,7 +45,6 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
 
     const paymentMethodSelectOptions = getPaymentMethodSelectOptions(paymentMethodOptions, activity.activityType?.id || -1);
 
-    //TODO: UPDATE DATE
     const updateActivityWithData = updateActivity.bind(null, activity.id, fields);
     const deleteActivityById = deleteActivity.bind(null, activity.id);
 
