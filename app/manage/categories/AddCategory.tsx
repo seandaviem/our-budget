@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Dispatch, SetStateAction } from "react";
-import { CategoriesSorted, sortCategories } from "./categoryHelpers";
+import { sortCategories } from "./categoryHelpers";
+import { CategoriesSorted } from "@/budget-types";
 import AddButton from "@/components/AddButton";
 
 interface AddCategoryProps {

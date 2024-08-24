@@ -1,6 +1,6 @@
 import prisma from "@/lib/db";
 import { getUserId } from "../getUserId";
-import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
+import { PaymentMethodObj } from "@/budget-types";
 
 export async function getPaymentMethods() {
     const userId = getUserId();

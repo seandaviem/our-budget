@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Dispatch, SetStateAction } from "react";
-import { ParentCategoryObj, CategoriesSorted } from "./categoryHelpers";
+import { ParentCategoryObj, CategoriesSorted } from "@/budget-types";
 import AddCategory from "./AddCategory";
 
 export default function CategoryListing({categoriesSorted}: {categoriesSorted: CategoriesSorted}) {

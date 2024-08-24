@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { Dispatch, SetStateAction } from "react";
-import { SortedPaymentMethodsObj, PaymentMethodsSorted } from "./paymentMethodHelpers";
+import { SortedPaymentMethodsObj, PaymentMethodsSorted, ActivityTypes } from "@/budget-types";
 import AddPaymentMethod from "./AddPaymentMethod";
-import { ActivityTypes } from "@/helpers/prisma/getGlobalActivityTypes";
 
 export default function PaymentMethodsListing({paymentMethodsSorted, activityTypes}: {
     paymentMethodsSorted: PaymentMethodsSorted,

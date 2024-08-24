@@ -1,9 +1,5 @@
-import prisma from "../../lib/db";
-
-export interface ActivityTypes {
-    id: number;
-    name: string;
-}
+import prisma from "@/lib/db";
+import { ActivityTypes } from "@/budget-types";
 
 export async function getGlobalActivityTypes() {
     const activityTypes: ActivityTypes[] = await prisma.activityType.findMany({ 

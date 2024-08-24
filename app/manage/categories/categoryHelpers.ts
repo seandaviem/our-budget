@@ -1,18 +1,4 @@
-export interface CategoryObj {
-    id: number;
-    name: string;
-    parentCategoryId: number | null
-}
-
-export interface ParentCategoryObj {
-    id: number;
-    name: string;
-    children: CategoryObj[];
-}
-
-export interface CategoriesSorted {
-    [key: number]: ParentCategoryObj
-}
+import { CategoryObj, CategoriesSorted } from '@/budget-types';
 
 export function sortCategories(categories: CategoryObj[]): CategoriesSorted {
     const categoriesSorted: CategoriesSorted = {};

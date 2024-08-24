@@ -2,9 +2,7 @@
 
 import { ChangeEvent } from "react";
 import { getFormattedDate } from "@/helpers/getFormattedDate";
-import { ActivityTypes } from "@/helpers/prisma/getGlobalActivityTypes";
-import { CategoriesSorted } from "@/app/manage/categories/categoryHelpers";
-import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
+import { ActivityTypes, CategoriesSorted, PaymentMethodObj } from "@/budget-types";
 import { addActivity } from "@/app/actions/addActivity";
 import toast from "react-hot-toast";
 import SubmitButton from "@/components/SubmitButton";

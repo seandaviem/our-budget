@@ -1,6 +1,6 @@
 import prisma from "@/lib/db";
 import { getUserId } from "../getUserId";
-import { CategoryObj } from "@/app/manage/categories/categoryHelpers";
+import { CategoryObj } from "@/budget-types";
 
 export async function getCategories() {
     const userId = getUserId();

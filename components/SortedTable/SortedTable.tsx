@@ -18,14 +18,7 @@ import {
   } from '@mantine/core';
   import { IconSelector, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
   import classes from './SortedTable.module.css';
-
-  export type TableCol = [key: string, label: string, sortable: boolean];
-
-  export type RowData = {
-    id: string | number;
-  } & {
-    [key: string]: any;
-  };
+  import { RowData, TableCol } from '@/budget-types';
 
   interface ThProps {
     children: React.ReactNode;

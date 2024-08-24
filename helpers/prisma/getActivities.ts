@@ -1,21 +1,7 @@
 import prisma from "@/lib/db";
 import { getUserId } from "../getUserId";
-import { ActivityTypes } from "./getGlobalActivityTypes";
-import { CategoryObj } from "@/app/manage/categories/categoryHelpers";
-import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
+import { ActivitiesObj } from "@/budget-types";
 import { DateRangeProps } from "../getDateRangeObj";
-
-export interface ActivitiesObj {
-    id: number;
-    date: Date;
-    title: string;
-    description: string | null;
-    amount: number;
-    activityType?: ActivityTypes;
-    category?: CategoryObj;
-    userId: string;
-    paymentMethod?: PaymentMethodObj;
-}
 
 export async function getActivities(limit = -1, dateRangeObj: DateRangeProps | null = null, startDate = '', endDate = ''): Promise<ActivitiesObj[]> {
     const userId = getUserId();
@@ -29,7 +15,8 @@ export async function getActivities(limit = -1, dateRangeObj: DateRangeProps | n
             amount: true,
             activityType: true,
             category: true,
-            paymentMethod: true
+            paymentMethod: true,
+            reimbursements: true
         },
         orderBy: [
             {

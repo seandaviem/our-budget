@@ -1,18 +1,4 @@
-export interface PaymentMethodObj {
-    id: number;
-    name: string;
-    activityType: { id: number; name: string; };
-}
-
-export interface SortedPaymentMethodsObj {
-    activityTypeId: number;
-    activityTypeName: string;
-    items: PaymentMethodObj[];
-}
-
-export interface PaymentMethodsSorted {
-    [key: number]: SortedPaymentMethodsObj; // key is activityType ID; 
-}
+import { PaymentMethodObj, PaymentMethodsSorted } from '@/budget-types';
 
 export function sortPaymentMethods(paymentMethods: PaymentMethodObj[]): PaymentMethodsSorted {
 

@@ -1,7 +1,5 @@
-import { CategoriesSorted } from "@/app/manage/categories/categoryHelpers";
-import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
+import { CategoriesSorted, PaymentMethodObj, ActivityTypes } from "@/budget-types";
 import { ComboboxData } from "@mantine/core";
-import { ActivityTypes } from "./prisma/getGlobalActivityTypes";
 
 export function getActivitySelectOptions(activityOptions: ActivityTypes[]): ComboboxData {
     if (activityOptions.length === 0) return ([{value: "", label: "No Activity Options Available", disabled: true}]);

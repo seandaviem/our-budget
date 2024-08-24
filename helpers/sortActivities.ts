@@ -1,5 +1,4 @@
-import { ActivitiesObj } from "./prisma/getActivities";
-import { ActivityTypes } from "./prisma/getGlobalActivityTypes";
+import { ActivitiesObj, ActivityTypes } from "@/budget-types";
 
 interface SortedActivityCategoryObj {
     name: string;

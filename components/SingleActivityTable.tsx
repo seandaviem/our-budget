@@ -2,10 +2,8 @@
 
 import { ChangeEvent, useState } from "react";
 import { Dispatch, SetStateAction } from "react";
-import { ActivitiesObj } from "@/helpers/prisma/getActivities";
 import { getFormattedDate } from "@/helpers/getFormattedDate";
-import { CategoriesSorted } from "@/app/manage/categories/categoryHelpers";
-import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
+import { ActivitiesObj, CategoriesSorted, PaymentMethodObj } from "@/budget-types";
 import { getCategorySelectOptions, getPaymentMethodSelectOptions } from "@/helpers/selectOptionHelpers";
 import { useForm } from "@/helpers/hooks/useForm";
 import { updateActivity } from "@/app/actions/updateActivity";
@@ -92,7 +90,8 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
     }
 
     return (
-        <>
+        <>  
+            <pre>{JSON.stringify(activity, null, 2)}</pre>
             <UnstyledButton
                 fz={"sm"}
                 className="font-medium text-blue-500 hover:underline"
@@ -252,6 +251,8 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
                 ) : (
                     ""
                 )}
+
+
             </div>
         </>
     );

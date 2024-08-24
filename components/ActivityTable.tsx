@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { Dispatch, SetStateAction } from "react";
-import { ActivitiesObj } from "@/helpers/prisma/getActivities";
+import { ActivitiesObj, PaymentMethodObj, CategoriesSorted, RowData, TableCol } from "@/budget-types";
 import { getFormattedDate } from "@/helpers/getFormattedDate";
-import { CategoriesSorted } from "@/app/manage/categories/categoryHelpers";
-import { PaymentMethodObj } from "@/app/manage/payment-methods/paymentMethodHelpers";
-import SortedTable, { RowData, TableCol } from "./SortedTable/SortedTable";
+import SortedTable from "./SortedTable/SortedTable";
 import { TableTd, TableTr, UnstyledButton } from "@mantine/core";
 import SingleActivityTable from "./SingleActivityTable";
 import { toCurrency } from "@/helpers/toCurrency";

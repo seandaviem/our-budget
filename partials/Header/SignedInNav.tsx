@@ -46,8 +46,8 @@ const links = [
             { link: "/activities/add-activity", label: "Add Activity" },
         ],
     },
-    { link: "/categories", label: "Categories" },
-    { link: "/payment-methods", label: "Payment Methods" },
+    { link: "/manage/categories", label: "Categories" },
+    { link: "/manage/payment-methods", label: "Payment Methods" },
     { link: "/dashboard", label: "Dashboard" },
 ];
 
