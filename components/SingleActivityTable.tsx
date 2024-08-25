@@ -3,7 +3,7 @@
 import { ChangeEvent, useState } from "react";
 import { Dispatch, SetStateAction } from "react";
 import { getFormattedDate } from "@/helpers/getFormattedDate";
-import { ActivitiesObj, CategoriesSorted, PaymentMethodObj, ReimbursementsObj, RowData } from "@/budget-types";
+import { ActivitiesObj, CategoriesSorted, PaymentMethodObj, ReimbursementsObj, RowData, ActivityTypeEnum } from "@/budget-types";
 import { getCategorySelectOptions, getPaymentMethodSelectOptions } from "@/helpers/selectOptionHelpers";
 import { useForm } from "@/helpers/hooks/useForm";
 import { updateActivity } from "@/app/actions/updateActivity";
@@ -11,10 +11,10 @@ import { deleteActivity } from "@/app/actions/deleteActivity";
 import toast from "react-hot-toast";
 import { Select, Table, TableTbody, TableTd, TableTh, TableThead, TableTr, Textarea, TextInput, UnstyledButton } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
-import { toCurrency } from "@/helpers/toCurrency";
 import ReimbursementTable from "./ReimbursementTable";
 import AddReimbursementForm from "@/app/activities/add-activity/AddReimbursementForm";
 import { sortRowData } from "@/helpers/sortRowData";
+import PriceListing from "./PriceListing";
 
 
 interface SetStateProp {
@@ -33,45 +33,54 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
     const [isEditing, setIsEditing] = useState(false);
     const [showReimbursementForm, setShowReimbursementForm] = useState(false);
     const sortedReimbursements = sortRowData(activity.reimbursements, { sortBy: 'date', reversed: true });
-    const [currentReimbursements, setCurrentReimbursements] = useState<ReimbursementsObj[]>(sortedReimbursements as ReimbursementsObj[]); //PERFORMANCE: Consider different approach rather than sort here (maybe rawQuery). Don't anticipate this being a performance issue though as number of reimbursements is expected to be low.
+    const [currentActivity, setCurrentActivity] = useState({
+        ...activity,
+        reimbursements: sortedReimbursements as ReimbursementsObj[]
+    });
     
     const defaultFormInputs = {
-        category: activity.category?.id?.toString() || '',
-        name: activity.title || '',
-        amount: activity.amount.toString(),
-        paymentMethod: activity.paymentMethod?.id?.toString() || '',
-        date: activity.date,
-        description: activity.description || ''
+        category: currentActivity.category?.id?.toString() || '',
+        name: currentActivity.title || '',
+        amount: currentActivity.amount.toString(),
+        paymentMethod: currentActivity.paymentMethod?.id?.toString() || '',
+        date: currentActivity.date,
+        description: currentActivity.description || ''
     };
     const { fields, updateForm, resetForm } = useForm(defaultFormInputs);
 
     const categorySelectOptions = getCategorySelectOptions(categoryOptions);
 
-    const paymentMethodSelectOptions = getPaymentMethodSelectOptions(paymentMethodOptions, activity.activityType?.id || -1);
+    // Check if activity is a type of expense to determine if reimbursement table should be shown
+    const isExpense = currentActivity.activityType?.id === ActivityTypeEnum.Expense || currentActivity.activityType?.id === ActivityTypeEnum.BigExpense;
+
+    const paymentMethodSelectOptions = getPaymentMethodSelectOptions(paymentMethodOptions, currentActivity.activityType?.id || -1);
     const reimbursementPaymentMethodOptions = getPaymentMethodSelectOptions(paymentMethodOptions, 3);
 
-    const updateActivityWithData = updateActivity.bind(null, activity.id, fields);
-    const deleteActivityById = deleteActivity.bind(null, activity.id);
+    const updateActivityWithData = updateActivity.bind(null, currentActivity.id, fields);
+    const deleteActivityById = deleteActivity.bind(null, currentActivity.id);
 
     let reimbursementSection = <p>There are currently no reimbursements.</p>
     if (showReimbursementForm) {
-        reimbursementSection = <AddReimbursementForm activityId={activity.id} paymentMethodSelectOptions={reimbursementPaymentMethodOptions} setShowReimbursementForm={setShowReimbursementForm} handleReimbursementsUpdate={handleReimbursementsUpdate} />;
-    } else if (currentReimbursements.length > 0) {
-        reimbursementSection = <ReimbursementTable reimbursements={currentReimbursements} paymentMethodSelectOptions={reimbursementPaymentMethodOptions} handleReimbursementsUpdate={handleReimbursementsUpdate} />;
+        reimbursementSection = <AddReimbursementForm activityId={currentActivity.id} paymentMethodSelectOptions={reimbursementPaymentMethodOptions} setShowReimbursementForm={setShowReimbursementForm} handleReimbursementsUpdate={handleReimbursementsUpdate} />;
+    } else if (currentActivity.reimbursements.length > 0) {
+        reimbursementSection = <ReimbursementTable reimbursements={currentActivity.reimbursements} paymentMethodSelectOptions={reimbursementPaymentMethodOptions} handleReimbursementsUpdate={handleReimbursementsUpdate} />;
     }
 
     function handleReimbursementsUpdate(newReimbursement: ReimbursementsObj, action: 'add' | 'update' | 'delete' = 'add') {
         let updatedReimbursements: RowData[] = [];
         
         if (action === 'add') {
-            updatedReimbursements = sortRowData([...currentReimbursements, newReimbursement], { sortBy: 'date', reversed: true });
+            updatedReimbursements = sortRowData([...currentActivity.reimbursements, newReimbursement], { sortBy: 'date', reversed: true });
         } else if (action === 'update') {
-            updatedReimbursements = sortRowData(currentReimbursements.map((reimbursement) => reimbursement.id === newReimbursement.id ? newReimbursement : reimbursement), { sortBy: 'date', reversed: true });
+            updatedReimbursements = sortRowData(currentActivity.reimbursements.map((reimbursement) => reimbursement.id === newReimbursement.id ? newReimbursement : reimbursement), { sortBy: 'date', reversed: true });
         } else if (action === 'delete') {
-            updatedReimbursements = sortRowData(currentReimbursements.filter((reimbursement) => reimbursement.id !== newReimbursement.id), { sortBy: 'date', reversed: true });
+            updatedReimbursements = sortRowData(currentActivity.reimbursements.filter((reimbursement) => reimbursement.id !== newReimbursement.id), { sortBy: 'date', reversed: true });
         }
 
-        setCurrentReimbursements(updatedReimbursements as ReimbursementsObj[]);
+        setCurrentActivity({
+            ...currentActivity,
+            reimbursements: updatedReimbursements as ReimbursementsObj[]
+        });
     }
 
     async function handleSaveChanges() {
@@ -198,8 +207,7 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
                                         onChange={handleInputChange}
                                     />
                                 ) : (
-                                    toCurrency(parseFloat(fields.amount)) ??
-                                    "$0.00"
+                                    <PriceListing activity={currentActivity} />
                                 )}
                             </TableTd>
                         </TableTr>
@@ -228,7 +236,7 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
                         <TableTr>
                             <TableTh>Activity Type</TableTh>
                             <TableTd>
-                                {activity.activityType?.name ?? "N/A"}
+                                {currentActivity.activityType?.name ?? "N/A"}
                             </TableTd>
                         </TableTr>
                         <TableTr>
@@ -250,7 +258,7 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
                                         }
                                     />
                                 ) : (
-                                    activity.category?.name ??
+                                    currentActivity.category?.name ??
                                     "No Category Selected"
                                 )}
                             </TableTd>
@@ -274,7 +282,7 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
                                         }
                                     />
                                 ) : (
-                                    activity.paymentMethod?.name ??
+                                    currentActivity.paymentMethod?.name ??
                                     "Payment Method Selected"
                                 )}
                             </TableTd>
@@ -292,33 +300,37 @@ export default function SingleActivityTable({ activity, categoryOptions, payment
                     ""
                 )}
 
-                <div className="reimbursements mt-5">
-                    <div className="flex items-center gap-5">
-                        <h2>Reimbursements: </h2>
-                        <div>
-                            {!showReimbursementForm ? (
-                                <button
-                                    className="btn btn-primary"
-                                    onClick={() =>
-                                        setShowReimbursementForm(true)
-                                    }
-                                >
-                                    Add Reimbursement
-                                </button>
-                            ) : (
-                                <button
-                                    className="btn btn-red"
-                                    onClick={() =>
-                                        setShowReimbursementForm(false)
-                                    }
-                                >
-                                    Cancel
-                                </button>
-                            )}
+                {isExpense ? (
+                    <div className="reimbursements mt-5">
+                        <div className="flex items-center gap-5">
+                            <h2>Reimbursements: </h2>
+                            <div>
+                                {!showReimbursementForm ? (
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={() =>
+                                            setShowReimbursementForm(true)
+                                        }
+                                    >
+                                        Add Reimbursement
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="btn btn-red"
+                                        onClick={() =>
+                                            setShowReimbursementForm(false)
+                                        }
+                                    >
+                                        Cancel
+                                    </button>
+                                )}
+                            </div>
                         </div>
+                        {reimbursementSection}
                     </div>
-                    {reimbursementSection}
-                </div>
+                ) : (
+                    ''
+                )}
             </div>
         </>
     );

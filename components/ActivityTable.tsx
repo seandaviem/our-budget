@@ -8,9 +8,8 @@ import { getFormattedDate } from "@/helpers/getFormattedDate";
 import SortedTable from "./SortedTable/SortedTable";
 import { TableTd, TableTr, UnstyledButton } from "@mantine/core";
 import SingleActivityTable from "./SingleActivityTable";
-import { toCurrency } from "@/helpers/toCurrency";
 import { getExcerpt } from "@/helpers/getExcerpt";
-import { getPriceColorOptions } from "@/helpers/getPriceColorOptions";
+import PriceListing from "./PriceListing";
 
 interface ActivityTableProps {
     activities: ActivitiesObj[];
@@ -49,8 +48,6 @@ export default function ActivityTable({ activities, categoryOptions, paymentMeth
 
 function FullActivityTable({ activities, setSelectedActivity }: FullActivityTableProps) {
 
-    const priceColorOptions: {[key: string] : string} = getPriceColorOptions();
-
     const cols: TableCol[] = [
         ['date', 'Date', true],
         ['title', 'Title', true],
@@ -61,7 +58,6 @@ function FullActivityTable({ activities, setSelectedActivity }: FullActivityTabl
 
     const rowFunc = (activities: RowData[]) => {
         return activities.map((activity) => {
-            const priceColor = activity.activityType?.name ? priceColorOptions[activity.activityType?.name.toLowerCase()] : '';
             const cells = cols.map((col) => {
                 const [key] = col;
                 switch (key) {
@@ -70,7 +66,7 @@ function FullActivityTable({ activities, setSelectedActivity }: FullActivityTabl
                     case 'title':
                         return <TableTd key={`${key}-${activity.id}`}>{activity['title']}</TableTd>
                     case 'amount':
-                        return <TableTd key={`${key}-${activity.id}`}><span className={`${priceColor}`}>{toCurrency(activity['amount'])}</span></TableTd>;
+                        return <TableTd key={`${key}-${activity.id}`}><PriceListing activity={activity as ActivitiesObj} /></TableTd>;
                     case 'description':
                         return <TableTd key={`${key}-${activity.id}`}>{getExcerpt(activity['description'], '-')}</TableTd>;
                     case 'details':

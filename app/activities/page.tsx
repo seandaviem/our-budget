@@ -7,6 +7,8 @@ import { getPaymentMethods } from "@/helpers/prisma/getPaymentMethods";
 import { sortCategories } from "../manage/categories/categoryHelpers";
 import DateRangeToggle from "@/components/DateRangeToggle";
 import { getDateRangeObj } from "@/helpers/getDateRangeObj";
+import { Toaster } from "react-hot-toast";
+
 
 export const metadata: Metadata = {
     title: 'Activities | Our Budget',
@@ -38,6 +40,7 @@ export default async function Activities({ searchParams}: { searchParams: { [key
                     <ActivityTable activities={activities} categoryOptions={sortedCategoryOptions} paymentMethodOptions={paymentMethodOptions} />
                 </div>
             </main>
+            <Toaster position="top-center" />
         </>
     );
 }

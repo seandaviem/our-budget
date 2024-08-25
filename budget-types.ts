@@ -29,6 +29,14 @@ export type RowData = {
  ********/
 
 // Activities
+
+// ActivityType Enum
+export enum ActivityTypeEnum {
+    Income = 1,
+    Expense = 2,
+    Reimbursement = 3,
+    BigExpense = 4
+}
 export interface ActivitiesObj {
     id: number;
     date: Date;

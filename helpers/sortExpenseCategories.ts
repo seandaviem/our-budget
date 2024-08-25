@@ -1,5 +1,6 @@
 import { SortedActivitiesObj } from "./sortActivities";
 
+// TODO: Implement ActivityTypeEnum when refactoring this later
 // returns the keys of the sortedActivities["2"]["categories"] object sorted by the total expense
 export function sortExpenseCategories(sortedActivities: SortedActivitiesObj, numResults = -1, order: 'asc' | 'desc' = 'desc') {
     const sortedExpenseCategories = Object.keys(sortedActivities["2"]["categories"]).sort((a: string, b: string): number => {
