@@ -18,6 +18,7 @@ model Activity {
   categoryId      Int
   userId          String        @db.VarChar(191)
   paymentMethodId Int
+  reimbursements  Reimbursement[]
   activityType    ActivityType  @relation(fields: [activityTypeId], references: [id])
   category        Category      @relation(fields: [categoryId], references: [id])
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
@@ -26,6 +27,22 @@ model Activity {
   @@index([categoryId], map: "idx_24578_Activity_categoryId_idx")
   @@index([paymentMethodId], map: "idx_24578_Activity_paymentMethodId_idx")
 }
+model Reimbursement {
+  id              Int           @id @default(autoincrement())
+  date            DateTime      @default(now())
+  title           String        @db.VarChar(255)
+  description     String?
+  amount          Float
+  activityId      Int
+  userId          String        @db.VarChar(191)
+  paymentMethodId Int
+  activity        Activity      @relation(fields: [activityId], references: [id])
+  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+
+  @@index([activityId])
+  @@index([paymentMethodId])
+}
+
 
 model Category {
   id               Int        @id(map: "idx_24591_PRIMARY") @default(autoincrement())
@@ -53,6 +70,7 @@ model PaymentMethod {
   activityTypeId Int
   activityType   ActivityType @relation(fields: [activityTypeId], references: [id])
   activities     Activity[]
+  reimbursements Reimbursement[]
 
   @@index([activityTypeId], map: "idx_24596_PaymentMethod_activityTypeId_idx")
 }

@@ -19,6 +19,7 @@ import {
   import { IconSelector, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
   import classes from './SortedTable.module.css';
   import { RowData, TableCol } from '@/budget-types';
+  import { sortRowData } from '@/helpers/sortRowData';
 
   interface ThProps {
     children: React.ReactNode;
@@ -29,32 +30,13 @@ import {
     onSort(): void;
   }
 
-  interface SortPayload {
-    sortBy: keyof RowData | null;
-    reversed: boolean;
-  }
-
   interface SortedTableProps {
     data: RowData[];
     cols: TableCol[];
     overrideRowsFunc?: ((data: RowData[]) => React.ReactElement<TableTrProps>[]) | null;
   }
 
-  function sortData(data: RowData[], payload: SortPayload) {
-    const { sortBy, reversed } = payload;
 
-    if (!sortBy) {
-        return data;
-    }
-
-    return [...data].sort((a, b) => {
-        if (typeof a[sortBy] === 'string') {
-            return reversed ? a[sortBy].localeCompare(b[sortBy]) : b[sortBy].localeCompare(a[sortBy]);
-        }
-
-        return reversed ? (b[sortBy] as any) - (a[sortBy] as any) : (a[sortBy] as any) - (b[sortBy] as any)
-    });
-  }
 
   export default function SortedTable({ data, cols, overrideRowsFunc = null } : SortedTableProps) {
 
@@ -62,13 +44,13 @@ import {
     const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
     const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
-    useEffect(() => setSortedData(sortData(data, { sortBy, reversed: reverseSortDirection })), [data]);
+    useEffect(() => setSortedData(sortRowData(data, { sortBy, reversed: reverseSortDirection })), [data]);
 
     const setSorting = (field: keyof RowData) => {
         const reversed = field === sortBy ? !reverseSortDirection : false;
         setReverseSortDirection(reversed);
         setSortBy(field);
-        setSortedData(sortData(data, { sortBy: field, reversed }));
+        setSortedData(sortRowData(data, { sortBy: field, reversed }));
     };
 
     const heads = cols.map((col) => {

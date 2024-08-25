@@ -39,6 +39,7 @@ export interface ActivitiesObj {
     category?: CategoryObj;
     userId: string;
     paymentMethod?: PaymentMethodObj;
+    reimbursements: ReimbursementsObj[];
 }
 
 export interface ActivityTypes {
@@ -46,11 +47,24 @@ export interface ActivityTypes {
     name: string;
 }
 
+// Reimbursements
+export interface ReimbursementsObj {
+    id: number;
+    date: Date;
+    title: string;
+    description: string | null;
+    amount: number;
+    activityId: number;
+    category?: CategoryObj;
+    userId: string;
+    paymentMethod?: PaymentMethodObj;
+}
+
 // Payment Methods
 export interface PaymentMethodObj {
     id: number;
     name: string;
-    activityType: { id: number; name: string; };
+    activityType: ActivityTypes;
 }
 
 export interface SortedPaymentMethodsObj {
@@ -62,3 +76,6 @@ export interface SortedPaymentMethodsObj {
 export interface PaymentMethodsSorted {
     [key: number]: SortedPaymentMethodsObj; // key is activityType ID; 
 }
+
+// Update Functions
+export type HandleReimbursementsUpdateFunction = (reimbursement: ReimbursementsObj, action: 'add' | 'update' | 'delete') => void;

@@ -6,6 +6,7 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './partials/**/*.{js,ts,jsx,tsx,mdx}',
+    './helpers/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     screens: {

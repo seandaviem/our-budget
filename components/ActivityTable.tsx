@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from "react";
-import { Dispatch, SetStateAction } from "react";
+//TODO: Decide if we want to make one general table component that can be used for all tables, or if we want to keep them separate
+
+import { useState, Dispatch, SetStateAction  } from "react";
 import { ActivitiesObj, PaymentMethodObj, CategoriesSorted, RowData, TableCol } from "@/budget-types";
 import { getFormattedDate } from "@/helpers/getFormattedDate";
 import SortedTable from "./SortedTable/SortedTable";
@@ -9,6 +10,7 @@ import { TableTd, TableTr, UnstyledButton } from "@mantine/core";
 import SingleActivityTable from "./SingleActivityTable";
 import { toCurrency } from "@/helpers/toCurrency";
 import { getExcerpt } from "@/helpers/getExcerpt";
+import { getPriceColorOptions } from "@/helpers/getPriceColorOptions";
 
 interface ActivityTableProps {
     activities: ActivitiesObj[];
@@ -47,12 +49,7 @@ export default function ActivityTable({ activities, categoryOptions, paymentMeth
 
 function FullActivityTable({ activities, setSelectedActivity }: FullActivityTableProps) {
 
-    const priceColorOptions: {[key: string] : string} = {
-        'expense': 'bg-red-700 bg-fff text-sm font-medium px-2.5 py-0.5 rounded-full',
-        'income': 'bg-green-700 bg-fff text-sm font-medium px-2.5 py-0.5 rounded-full',
-        'reimbursement': 'bg-orange-700 bg-fff text-sm font-medium px-2.5 py-0.5 rounded-full',
-        'big expense': 'bg-red-900 bg-fff text-sm font-medium px-2.5 py-0.5 rounded-full'
-    };
+    const priceColorOptions: {[key: string] : string} = getPriceColorOptions();
 
     const cols: TableCol[] = [
         ['date', 'Date', true],
