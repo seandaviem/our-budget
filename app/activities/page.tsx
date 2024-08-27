@@ -37,7 +37,16 @@ export default async function Activities({ searchParams}: { searchParams: { [key
                     </Link>
                     <div className="my-5"><DateRangeToggle dateRangeObj={dateRangeObj} /></div> 
                     <p className="mb-3">Activity:</p> 
-                    <ActivityTable activities={activities} categoryOptions={sortedCategoryOptions} paymentMethodOptions={paymentMethodOptions} />
+                    { activities.length > 0 ? (
+                        <ActivityTable 
+                            activities={activities} 
+                            categoryOptions={sortedCategoryOptions} 
+                            paymentMethodOptions={paymentMethodOptions} 
+                            showPagintion={true} 
+                        />
+                    ) : (
+                        <p className="text-sm">No activities found.</p>
+                    )}
                 </div>
             </main>
             <Toaster position="top-center" />

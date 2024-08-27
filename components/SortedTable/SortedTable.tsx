@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
     Table,
     ScrollArea,
@@ -15,11 +15,13 @@ import {
     TableTbody,
     TableTrProps,
     TableThead,
+    Pagination,
   } from '@mantine/core';
   import { IconSelector, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
   import classes from './SortedTable.module.css';
   import { RowData, TableCol } from '@/budget-types';
   import { sortRowData } from '@/helpers/sortRowData';
+import { chunkTableData } from '@/helpers/chunkTableData';
 
   interface ThProps {
     children: React.ReactNode;
@@ -34,15 +36,33 @@ import {
     data: RowData[];
     cols: TableCol[];
     overrideRowsFunc?: ((data: RowData[]) => React.ReactElement<TableTrProps>[]) | null;
+    showPagination?: boolean;
+    itemsPerPage?: number;
   }
 
 
+  //NOTE: Hold off on pagination in url params for now until caching is figured out
+  /*Additional Features to add later:
+  // 1. Add search functionality
+  // 2. Add url parms later
+  // 3. Add other filtering options
+  // 4. Decide if we event want pagination, or if we want to do infinite scroll
+  */
 
-  export default function SortedTable({ data, cols, overrideRowsFunc = null } : SortedTableProps) {
+  export default function SortedTable({ data, cols, overrideRowsFunc = null, showPagination = false, itemsPerPage = -1 } : SortedTableProps) {
 
     const [sortedData, setSortedData] = useState(data);
     const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
     const [reverseSortDirection, setReverseSortDirection] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const chunkedData = useMemo(() => {
+        if (!showPagination) {
+            return [sortedData];
+        }
+
+        return chunkTableData(sortedData, itemsPerPage);
+    }, [sortedData, showPagination, itemsPerPage]);
 
     useEffect(() => setSortedData(sortRowData(data, { sortBy, reversed: reverseSortDirection })), [data]);
 
@@ -51,6 +71,9 @@ import {
         setReverseSortDirection(reversed);
         setSortBy(field);
         setSortedData(sortRowData(data, { sortBy: field, reversed }));
+        if (setCurrentPage !== null) {
+            setCurrentPage(1);
+        }
     };
 
     const heads = cols.map((col) => {
@@ -71,7 +94,7 @@ import {
         ;
     });
 
-    const rows = overrideRowsFunc !== null ? overrideRowsFunc(sortedData) : sortedData.map((row) => {
+    const rows = overrideRowsFunc !== null ? overrideRowsFunc(chunkedData[currentPage - 1]) : chunkedData[currentPage - 1].map((row) => {
         // TODO: This is going to break if you pass objects and such...
         const cells = cols.map((col) => {
             const [key] = col;
@@ -82,28 +105,37 @@ import {
     });
 
     return (
-        <ScrollArea>
-            <Table className='sorted-table' horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
-                <TableThead>
-                    <TableTr>
-                        {heads}
-                    </TableTr>
-                </TableThead>
-                <TableTbody>
-                    {rows.length > 0 ? (
-                        rows
-                    ): (
+        <>
+            <ScrollArea>
+                <Table className='sorted-table' horizontalSpacing="md" verticalSpacing="xs" miw={700} layout="fixed">
+                    <TableThead>
                         <TableTr>
-                            <TableTd colSpan={cols.length}>
-                                <Text fw={500} ta="center">
-                                    Nothing found
-                                </Text>
-                            </TableTd>
+                            {heads}
                         </TableTr>
-                    )}
-                </TableTbody>
-            </Table>
-        </ScrollArea>
+                    </TableThead>
+                    <TableTbody>
+                        {rows.length > 0 ? (
+                            rows
+                        ): (
+                            <TableTr>
+                                <TableTd colSpan={cols.length}>
+                                    <Text fw={500} ta="center">
+                                        Nothing found
+                                    </Text>
+                                </TableTd>
+                            </TableTr>
+                        )}
+                    </TableTbody>
+                </Table>
+            </ScrollArea>
+            { showPagination && (
+                <Pagination 
+                    className="mt-10" 
+                    value={currentPage} 
+                    onChange={setCurrentPage} 
+                    total={chunkedData.length} /> 
+            )}
+        </>
     );
   }
 

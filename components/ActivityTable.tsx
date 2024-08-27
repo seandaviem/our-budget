@@ -15,6 +15,8 @@ interface ActivityTableProps {
     activities: ActivitiesObj[];
     categoryOptions: CategoriesSorted;
     paymentMethodOptions: PaymentMethodObj[];
+    showPagintion?: boolean;
+    itemsPerPage?: number;
 }
 
 interface SetStateProp {
@@ -23,9 +25,11 @@ interface SetStateProp {
 
 interface FullActivityTableProps extends SetStateProp {
     activities: ActivitiesObj[];
+    showPagination: boolean;
+    itemsPerPage: number;
 }
 
-export default function ActivityTable({ activities, categoryOptions, paymentMethodOptions }: ActivityTableProps) {
+export default function ActivityTable({ activities, categoryOptions, paymentMethodOptions, showPagintion = false, itemsPerPage = 20 }: ActivityTableProps) {
 
     const [selectedActivity, setSelectedActivity] = useState<ActivitiesObj | null>(null);
 
@@ -39,14 +43,21 @@ export default function ActivityTable({ activities, categoryOptions, paymentMeth
                     setSelectedActivity={setSelectedActivity} 
                 />
             :
-                <FullActivityTable activities={activities} setSelectedActivity={setSelectedActivity} />
+                <FullActivityTable activities={activities} setSelectedActivity={setSelectedActivity} showPagination={showPagintion} itemsPerPage={itemsPerPage} />
             }
         </>
     );
 }
 
 
-function FullActivityTable({ activities, setSelectedActivity }: FullActivityTableProps) {
+function FullActivityTable({ activities, showPagination, itemsPerPage, setSelectedActivity }: FullActivityTableProps) {
+    
+    // Chunk Data (useMemo with activities as dependency)
+    // add state for pagination
+    // Add pagination component
+    // switch chunk when the state changes
+
+
 
     const cols: TableCol[] = [
         ['date', 'Date', true],
@@ -90,6 +101,14 @@ function FullActivityTable({ activities, setSelectedActivity }: FullActivityTabl
         });
     }
 
-    return <SortedTable data={activities} cols={cols} overrideRowsFunc={rowFunc} />
+    return (
+        <SortedTable 
+            data={activities} 
+            cols={cols} 
+            overrideRowsFunc={rowFunc}
+            showPagination={showPagination}
+            itemsPerPage={itemsPerPage}
+        />
+    );
 
 }
