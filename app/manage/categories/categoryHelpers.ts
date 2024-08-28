@@ -8,11 +8,11 @@ export function sortCategories(categories: CategoryObj[]): CategoriesSorted {
             categoriesSorted[currId] = {
                 id: currId,
                 name: categories[i].name,
-                children: []
+                items: []
             };
         } else {
             const currId = categories[i].parentCategoryId || 0;
-            categoriesSorted[currId].children.push(categories[i]);
+            categoriesSorted[currId].items.push(categories[i]);
         }
     }
 

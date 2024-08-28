@@ -8,7 +8,7 @@ export interface CategoryObj {
 export interface ParentCategoryObj {
     id: number;
     name: string;
-    children: CategoryObj[];
+    items: CategoryObj[];
 }
 
 export interface CategoriesSorted {

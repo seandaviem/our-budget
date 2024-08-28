@@ -1,8 +1,8 @@
 import { getUserId } from "@/helpers/getUserId";
-import CategoryListing from "./CategoryListing";
 import { getCategories } from "@/helpers/prisma/getCategories";
 import { sortCategories } from "./categoryHelpers";
 import { Metadata } from "next"
+import CategoryListingPage from "@/components/CategoryListingPage/CategoryListingPage";
 
 export const metadata: Metadata = {
     title: 'Manage Categories | Our Budget',
@@ -18,7 +18,10 @@ export default async function ManageCategories() {
 
     return (
         <main className="container mx-auto">
-            <CategoryListing categoriesSorted={categoriesSorted} />
+            {/* <CategoryListing categoriesSorted={categoriesSorted} /> */}
+            <div className="my-10">
+                <CategoryListingPage data={categoriesSorted} />
+            </div>
         </main>
     );
 
