@@ -10,13 +10,14 @@ import {
     Modal,
 } from '@mantine/core';
 import classes from './CategoryListingPage.module.css';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useDisclosure } from '@/helpers/hooks/useDisclosure';
 import EditCategoryForm from '../EditCategoryForm';
 
 interface ItemsObj {
     id: number;
     name: string;
+    icon?: string;
 }
 
 export type ItemsObjType<T> = T extends ItemsObj ? T : never;
@@ -31,28 +32,46 @@ interface SortedItems<T> {
     [key: number]: SortedItemsObj<ItemsObjType<T>>;
 }
 
+interface CategoryCardProps<T> {
+    data: SortedItemsObj<ItemsObjType<T>>;
+    openModal: () => void;
+    setCurrentItem: Dispatch<SetStateAction<ItemsObjType<T> | null>>;
+}
+
 export default function CategoryListingPage<T extends ItemsObj>({ data }: { data: SortedItems<T>}) {
-  
+
+    const [currentItem, setCurrentItem] = useState<ItemsObjType<T> | null>(null);
+    const [modalOpened, modal] = useDisclosure(false);
+
     return (
-        <SimpleGrid 
-            cols={{base: 1, sm: 2, md: 3}}
-        >
-            {Object.values(data).map((category) => (
-                <CategoryCard key={category.id} data={category} />
-            ))}
-        </SimpleGrid>
+        <>
+            <SimpleGrid 
+                cols={{base: 1, sm: 2, md: 3}}
+            >
+                {Object.values(data).map((category) => (
+                    <CategoryCard 
+                        key={category.id} 
+                        data={category}
+                        openModal={modal.open} 
+                        setCurrentItem={setCurrentItem} 
+                    />
+                ))}
+            </SimpleGrid>
+            <Modal opened={modalOpened} onClose={modal.close} title="Edit Category" centered>
+                <EditCategoryForm 
+                    category={currentItem as ItemsObjType<T>}                    
+                />
+            </Modal>
+        </>
     );
 
 }
 
-function CategoryCard<T>({ data }: { data: SortedItemsObj<ItemsObjType<T>> }) {
-
-    const [currentItem, setCurrentItem] = useState<ItemsObjType<T> | null>(null);
-    const [ opened, { open, close}] = useDisclosure(false);
+function CategoryCard<T>({ data, openModal, setCurrentItem }: CategoryCardProps<T>) {
 
     function handleItemClick(item: ItemsObjType<T>) {
         setCurrentItem(item);
-        open();
+        openModal();
     }
 
     const items = data.items.map((item) => (
@@ -62,27 +81,23 @@ function CategoryCard<T>({ data }: { data: SortedItemsObj<ItemsObjType<T>> }) {
             onClick={() => handleItemClick(item)}
         >
             <Text size="xs" mt={7}>
-            {item.name}
+                {item.name}
             </Text>
         </UnstyledButton>
     ));
 
     return (
         <>  
-            <Modal opened={opened} onClose={close} title="Edit Category" centered>
-                <EditCategoryForm category={currentItem as ItemsObjType<T>} />
-            </Modal>
-
             <Card withBorder radius="md" className={classes.card}>
-            <Group justify="space-between">
-                <Text className={classes.title}>{ data.name }</Text>
-                <Anchor size="xs" c="dimmed" style={{ lineHeight: 1 }}>
-                Add New Item
-                </Anchor>
-            </Group>
-            <SimpleGrid cols={{base: 1, sm: 2, md: 2}} mt="md">
-                {items}
-            </SimpleGrid>
+                <Group justify="space-between">
+                    <Text className={classes.title}>{ data.name }</Text>
+                    <Anchor size="xs" c="dimmed" style={{ lineHeight: 1 }}>
+                        Add New Item
+                    </Anchor>
+                </Group>
+                <SimpleGrid cols={{base: 1, sm: 2, md: 2}} mt="md">
+                    {items}
+                </SimpleGrid>
             </Card>
         </>
       );
