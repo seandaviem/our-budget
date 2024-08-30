@@ -2,29 +2,26 @@
 
 import { useForm } from "@/helpers/hooks/useForm";
 import { ItemsObjType } from "./CategoryListingPage/CategoryListingPage";
-import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ActionIcon, Avatar, Drawer, TextInput } from "@mantine/core";
-import { IconStar } from "@tabler/icons-react";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ActionIcon, Drawer, TextInput } from "@mantine/core";
+import { IconFileDollar } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import { useDisclosure } from "@/helpers/hooks/useDisclosure";
-import { getIconMap } from "@/helpers/getIconMap";
 
 const IconPicker = dynamic(() => import("@/components/IconPicker"));
 
 interface EditCategoryFormProps<T> {
     category: ItemsObjType<T>;
+    iconMap: { [key: string]: React.ComponentType<any> };
 }
 
-export default function EditCategoryForm<T>({ category }: EditCategoryFormProps<T>) {
-
-    const iconMap = useMemo(() => getIconMap(), []);
+export default function EditCategoryForm<T>({ category, iconMap }: EditCategoryFormProps<T>) {
 
     const { fields, updateForm } = useForm({
-        id: category.id,
-        icon: '',
-        name: category.name,
+        id: category?.id || 0,
+        icon: category?.icon || 'IconFileDollar',
+        name: category?.name || '',
     });
-    const usedInputRef = useRef(false);
     const [disableButton, setDisableButton] = useState(true);
     const [drawerOpened, drawer] = useDisclosure(false);
 
@@ -38,27 +35,37 @@ export default function EditCategoryForm<T>({ category }: EditCategoryFormProps<
         const { name, value } = e.target;
         updateForm({ key: name, value });
 
-        if (!usedInputRef.current) {
-            usedInputRef.current = true;
+        if (value && (value !== category?.name || fields.icon !== category?.icon)) {
             setDisableButton(false);
+        } else {
+            setDisableButton(true);
         }
     }
 
     const handleIconSelect = useCallback((name: string) => {
         updateForm({ key: 'icon', value: name });
-    }, []);
+
+        if (fields.name && (name !== category?.icon || fields.name !== category?.name)) {
+            setDisableButton(false);
+        } else {
+            setDisableButton(true);
+        }
+    }, [drawerOpened]);
+
 
     return (
         <>
-            <div className="categoryForm">
-                <Avatar
-                    color="blue"
-                    radius="xl"
+            <div className="categoryForm flex flex-col gap-4">
+                <ActionIcon 
+                    className="self-center"
+                    size={"72px"} 
+                    color="gray" 
+                    variant="filled" 
+                    radius="50%" 
+                    onClick={drawer.open}
                 >
-                    <ActionIcon size="xl" color="blue" variant="filled" radius="xl" onClick={drawer.open}>
-                        {fields.icon ? React.createElement(iconMap[fields.icon], { size: 24 }) : <IconStar size={24} />}
-                    </ActionIcon>
-                </Avatar>
+                    {fields.icon ? React.createElement(iconMap[fields.icon], { size: 48 }) : <IconFileDollar size={48} />}
+                </ActionIcon>
                 <TextInput
                     id="name"
                     name="name"
@@ -69,7 +76,7 @@ export default function EditCategoryForm<T>({ category }: EditCategoryFormProps<
                     onChange={handleInputChange}
                 />
                 <div className="mt-5 flex gap-3">
-                    <button className="btn btn-primary" disabled={disableButton}>Save</button>
+                    <button className="btn btn-primary" disabled={disableButton}>{category ? "Save" : "Add"}</button>
                     <button className="btn btn-red">Delete</button>
                 </div>
             </div>

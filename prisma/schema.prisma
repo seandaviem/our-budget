@@ -47,6 +47,7 @@ model Reimbursement {
 model Category {
   id               Int        @id(map: "idx_24591_PRIMARY") @default(autoincrement())
   name             String     @db.VarChar(255)
+  icon             String     @default("IconFileDollar")
   userId           String     @db.VarChar(191)
   parentCategoryId Int?
   activities       Activity[]
@@ -66,6 +67,7 @@ model ActivityType {
 model PaymentMethod {
   id             Int          @id(map: "idx_24596_PRIMARY") @default(autoincrement())
   name           String       @db.VarChar(255)
+  icon           String       @default("IconFileDollar")
   userId         String       @db.VarChar(191)
   activityTypeId Int
   activityType   ActivityType @relation(fields: [activityTypeId], references: [id])

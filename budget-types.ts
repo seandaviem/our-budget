@@ -2,6 +2,7 @@
 export interface CategoryObj {
     id: number;
     name: string;
+    icon: string;
     parentCategoryId: number | null
 }
 
@@ -72,6 +73,7 @@ export interface ReimbursementsObj {
 export interface PaymentMethodObj {
     id: number;
     name: string;
+    icon: string;
     activityType: ActivityTypes;
 }
 

@@ -8,9 +8,9 @@ export function getActivitySelectOptions(activityOptions: ActivityTypes[]): Comb
 }
 
 export function getCategorySelectOptions(categoryOptions: CategoriesSorted): ComboboxData {
-    return Object.keys(categoryOptions).filter((key) => categoryOptions[parseInt(key)].children.length > 0).map((key: string) => {
+    return Object.keys(categoryOptions).filter((key) => categoryOptions[parseInt(key)].items.length > 0).map((key: string) => {
         const catId = parseInt(key);
-        const items = categoryOptions[catId].children.map(option => ({ value: option.id.toString(), label: option.name }));
+        const items = categoryOptions[catId].items.map(option => ({ value: option.id.toString(), label: option.name }));
         return {
             group: categoryOptions[catId].name,
             items: items

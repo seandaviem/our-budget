@@ -9,6 +9,7 @@ export async function getPaymentMethods() {
         select: {
             id: true,
             name: true,
+            icon: true,
             activityType: true
         },
         orderBy: [

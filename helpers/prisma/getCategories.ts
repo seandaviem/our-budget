@@ -9,6 +9,7 @@ export async function getCategories() {
         select: {
             id: true,
             name: true,
+            icon: true,
             parentCategoryId: true
         },
         orderBy: [

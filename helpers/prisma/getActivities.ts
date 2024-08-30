@@ -16,7 +16,7 @@ export async function getActivities(limit = -1, dateRangeObj: DateRangeProps | n
             activityType: true,
             category: true,
             paymentMethod: true,
-            reimbursements: true
+            reimbursements: true,
         },
         orderBy: [
             {
@@ -50,7 +50,8 @@ export async function getActivities(limit = -1, dateRangeObj: DateRangeProps | n
         activityQuery["take"] = limit;
     }
 
-    const activities = await prisma.activity.findMany(activityQuery);
+    //TODO: Fix - Something weird going on with the typing here...
+    const activities: any = await prisma.activity.findMany(activityQuery);
 
     return activities;
 }

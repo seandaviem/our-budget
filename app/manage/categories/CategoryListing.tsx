@@ -43,8 +43,8 @@ function CategoryTable({ category, setCategories }: {category: ParentCategoryObj
                         </tr>
                     </thead>
                     <tbody>
-                        {category.children.length > 0
-                            ? category.children.map((subCat) => (
+                        {category.items.length > 0
+                            ? category.items.map((subCat) => (
                                   <tr
                                       key={subCat.id}
                                       className="border-b bg-gray-800 border-gray-700"
