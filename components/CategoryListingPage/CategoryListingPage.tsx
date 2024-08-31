@@ -17,13 +17,15 @@ import EditCategoryForm from '../EditCategoryForm';
 import { getIconMap } from '@/helpers/getIconMap';
 import { IconFileDollar } from '@tabler/icons-react';
 
-interface ItemsObj {
+export interface ItemsObj {
     id: number;
     name: string;
     icon: string;
 }
 
 export type ItemsObjType<T> = T extends ItemsObj ? T : never;
+
+export type ItemsUpdatedResponse = Promise<Response | ItemsObj | { error: string; }>;
 
 interface SortedItemsObj<T> {
     id: number;
@@ -35,21 +37,46 @@ interface SortedItems<T> {
     [key: number]: SortedItemsObj<ItemsObjType<T>>;
 }
 
+interface CategoryListingPageProps<T> {
+    data: SortedItems<T>;
+    onEditCategory: (item: ItemsObjType<T>, parentId: number) => ItemsUpdatedResponse;
+    onAddCategory: (item: ItemsObjType<T>, parentId: number) => ItemsUpdatedResponse;
+}
+
 interface CategoryCardProps<T> {
     data: SortedItemsObj<ItemsObjType<T>>;
     iconMap: { [key: string]: React.ComponentType<any> };
-    openModal: () => void;
-    setCurrentItem: Dispatch<SetStateAction<ItemsObjType<T> | null>>;
+    onEditCategoryClick: (item: ItemsObjType<T>, parentId: number) => void;
+    onAddCategoryClick: (parentId: number) => void;
 }
 
-export default function CategoryListingPage<T extends ItemsObj>({ data }: { data: SortedItems<T>}) {
+export default function CategoryListingPage<T extends ItemsObj>({ data, onEditCategory, onAddCategory }: CategoryListingPageProps<T>) {
 
     const [currentItem, setCurrentItem] = useState<ItemsObjType<T> | null>(null);
+    const [currentParentId, setCurrentParentId] = useState<number | null>(null);
     const [modalOpened, modal] = useDisclosure(false);
     
     const iconMap = useMemo(() => getIconMap(), []);
 
     const modalTitle = currentItem ? "Edit Category" : "Add Category";
+
+    function handleEditItem(item: ItemsObjType<T>, parentId: number) {
+        setCurrentItem(item);
+        setCurrentParentId(parentId);
+        modal.open();
+    }
+
+    function handleAddItem(parentId: number) {
+        setCurrentItem(null);
+        setCurrentParentId(parentId);
+        modal.open();
+    }
+
+    function handleModalClose() {
+        setCurrentItem(null);
+        setCurrentParentId(null);
+        modal.close();
+    }
 
     return (
         <>
@@ -61,15 +88,19 @@ export default function CategoryListingPage<T extends ItemsObj>({ data }: { data
                         key={category.id} 
                         data={category}
                         iconMap={iconMap}
-                        openModal={modal.open} 
-                        setCurrentItem={setCurrentItem} 
+                        onEditCategoryClick={handleEditItem}
+                        onAddCategoryClick={handleAddItem}
                     />
                 ))}
             </SimpleGrid>
-            <Modal opened={modalOpened} onClose={modal.close} title={modalTitle} centered>
+            <Modal opened={modalOpened} onClose={handleModalClose} title={modalTitle} centered>
                 <EditCategoryForm 
-                    category={currentItem as ItemsObjType<T>}  
-                    iconMap={iconMap}                  
+                    category={currentItem as ItemsObjType<T>}
+                    parentId={currentParentId as number}  
+                    iconMap={iconMap}
+                    onUpdate={handleModalClose}
+                    onEditCategory={onEditCategory}
+                    onAddCategory={onAddCategory}                  
                 />
             </Modal>
         </>
@@ -77,23 +108,13 @@ export default function CategoryListingPage<T extends ItemsObj>({ data }: { data
 
 }
 
-function CategoryCard<T>({ data, iconMap, openModal, setCurrentItem }: CategoryCardProps<T>) {
-
-    function handleItemClick(item: ItemsObjType<T>) {
-        setCurrentItem(item);
-        openModal();
-    }
-
-    function handleAddItemClick() {
-        setCurrentItem(null);
-        openModal();
-    }
+function CategoryCard<T>({ data, iconMap, onEditCategoryClick, onAddCategoryClick }: CategoryCardProps<T>) {
 
     const items = data.items.map((item) => (
         <UnstyledButton 
             key={item.id} 
             className={classes.item}
-            onClick={() => handleItemClick(item)}
+            onClick={() => onEditCategoryClick(item, data.id)}
         >
             <Avatar
                 size="md"
@@ -117,7 +138,7 @@ function CategoryCard<T>({ data, iconMap, openModal, setCurrentItem }: CategoryC
                         size="xs" 
                         c="dimmed" 
                         style={{ lineHeight: 1 }}
-                        onClick={handleAddItemClick}
+                        onClick={() => onAddCategoryClick(data.id)}
                     >
                         + Add New Item
                     </Anchor>
