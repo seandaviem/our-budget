@@ -10,7 +10,12 @@ export async function getCategories() {
             id: true,
             name: true,
             icon: true,
-            parentCategoryId: true
+            parentCategoryId: true,
+            _count: {
+                select: {
+                    activities: true
+                }
+            }
         },
         orderBy: [
             {

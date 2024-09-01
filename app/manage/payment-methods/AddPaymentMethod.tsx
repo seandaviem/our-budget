@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction } from "react";
 import { sortPaymentMethods } from "./paymentMethodHelpers";
 import { PaymentMethodsSorted } from "@/budget-types";
 import { ActivityTypes } from "@/budget-types";
-import AddButton from "@/components/AddButton";
+import LoadButton from "@/components/LoadButton";
 
 interface AddPaymentMethodProps {
     activityTypeId: number | null;
@@ -71,7 +71,10 @@ export default function AddPaymentMethod({activityTypeId, setPaymentMethods, act
             }
             <input type="text" className="border text-sm rounded-lg p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" placeholder="Payment Method Name"  value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} />
 
-            <AddButton isAdding={isAdding} handleAdd={handleAddPaymentMethod} />
+            {/* <LoadButton 
+                isLoading={isAdding} 
+                handleAdd={handleAddPaymentMethod} 
+            /> */}
         </div>
     )
 }

@@ -6,20 +6,20 @@ import { getUserId } from "@/helpers/getUserId";
 import { getErrorMessage } from "@/helpers/getErrorMessage";
 import { ItemsObjType, ItemsObj } from "@/components/CategoryListingPage/CategoryListingPage";
 
-export async function addCategory(fields: ItemsObjType<ItemsObj>, parentId: number) {
+export async function addCategory(fields: ItemsObjType<ItemsObj>, parentId: number | null) {
     const userId = getUserId();
 
     if (!userId) {
-        return new Response("Unauthroized", { status: 401 });
+        return new Response("Unauthorized", { status: 401 });
     }
 
     const name = fields.name;
     const icon = fields.icon;
     const parentCategoryId = parentId;
 
-    if (!name || !icon || !parentId) {
+    if (!name || !icon) {
         return {
-            error: "Name, icon, and parent category are required."
+            error: "Name and icon are required."
         }
     }
 
@@ -34,7 +34,13 @@ export async function addCategory(fields: ItemsObjType<ItemsObj>, parentId: numb
             select: {
                 id: true,
                 name: true,
-                icon: true
+                icon: true,
+                _count: {
+                    select: {
+                        activities: true
+                    }
+                },
+                parentCategoryId: true
             }
         });
 

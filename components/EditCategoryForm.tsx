@@ -1,27 +1,30 @@
 "use client"
 
 import { useForm } from "@/helpers/hooks/useForm";
-import { ItemsObjType } from "./CategoryListingPage/CategoryListingPage";
-import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ItemsDeletedResponse, ItemsObjType } from "./CategoryListingPage/CategoryListingPage";
+import React, { ChangeEvent, Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import { ActionIcon, Drawer, TextInput } from "@mantine/core";
 import { IconFileDollar } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 import { useDisclosure } from "@/helpers/hooks/useDisclosure";
 import toast from "react-hot-toast";
 import { ItemsUpdatedResponse } from "./CategoryListingPage/CategoryListingPage";
+import LoadButton from "./LoadButton";
 
 const IconPicker = dynamic(() => import("@/components/IconPicker"));
 
 interface EditCategoryFormProps<T> {
     category: ItemsObjType<T> | null;
-    parentId: number;
+    parentId: number | null;
     iconMap: { [key: string]: React.ComponentType<any> };
     onUpdate: () => void;
-    onEditCategory: (item: ItemsObjType<T>, parentId: number) => ItemsUpdatedResponse;
-    onAddCategory: (item: ItemsObjType<T>, parentId: number) => ItemsUpdatedResponse;
+    onEditCategory: (item: ItemsObjType<T>, parentId: number | null) => ItemsUpdatedResponse<T>;
+    onAddCategory: (item: ItemsObjType<T>, parentId: number | null) => ItemsUpdatedResponse<T>;
+    onDeleteCategory: (deleteId: number, reassignId: number | null) => ItemsDeletedResponse;
+    setShowDeleteCategoryForm: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpdate, onEditCategory, onAddCategory }: EditCategoryFormProps<T>) {
+export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpdate, onEditCategory, onAddCategory, onDeleteCategory, setShowDeleteCategoryForm }: EditCategoryFormProps<T>) {
 
     const { fields, updateForm } = useForm({
         id: category?.id || 0,
@@ -30,9 +33,11 @@ export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpd
     });
     const [disableButton, setDisableButton] = useState(true);
     const [drawerOpened, drawer] = useDisclosure(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const updateCategoryWithData = onEditCategory.bind(null, fields as ItemsObjType<T>, parentId);
     const addCategoryWithData = onAddCategory.bind(null, fields as ItemsObjType<T>, parentId);
+    const deleteCategoryWithData = onDeleteCategory.bind(null, fields.id, null);
 
     useEffect(() => {
         if (drawerOpened) {
@@ -62,6 +67,8 @@ export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpd
     }, [drawerOpened]);
 
     async function handleSaveChanges() {
+        setIsLoading(true);
+
         let result;
         if (category === null) {
             result = await addCategoryWithData();
@@ -76,6 +83,42 @@ export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpd
         }
 
         onUpdate();
+        setIsLoading(false);
+
+    }
+
+    async function handleDeleteCategory() {
+        setIsLoading(true);
+
+        const result = await deleteCategoryWithData();
+
+        if ("error" in result) {
+            toast.error(result.error);
+        } else {
+            toast.success("Category has been deleted!");
+        }
+
+        onUpdate();
+        setIsLoading(false);
+    }
+
+    function handleDeleteClick() {
+        let hasItems = false;
+        if (category !== null && ("_count" in category)) {
+            Object.keys(category._count).forEach((key) => {
+                if (category._count[key] > 0) {
+                    hasItems = true;
+                }
+            });
+        }
+
+        if (hasItems) {
+            setShowDeleteCategoryForm(true);
+            return;
+        }
+
+        console.log("This ran");
+        handleDeleteCategory();
 
     }
 
@@ -83,17 +126,19 @@ export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpd
     return (
         <>
             <div className="categoryForm flex flex-col gap-4">
-                <ActionIcon 
-                    className="self-center"
-                    size={"72px"} 
-                    color="gray" 
-                    variant="filled" 
-                    radius="50%" 
-                    name="icon"
-                    onClick={drawer.open}
-                >
-                    {fields.icon ? React.createElement(iconMap[fields.icon], { size: 48 }) : <IconFileDollar size={48} />}
-                </ActionIcon>
+                {parentId && 
+                    <ActionIcon 
+                        className="self-center"
+                        size={"72px"} 
+                        color="gray" 
+                        variant="filled" 
+                        radius="50%" 
+                        name="icon"
+                        onClick={drawer.open}
+                    >
+                        {fields.icon ? React.createElement(iconMap[fields.icon], { size: 48 }) : <IconFileDollar size={48} />}
+                    </ActionIcon>
+                }
                 <TextInput
                     id="name"
                     name="name"
@@ -104,14 +149,25 @@ export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpd
                     onChange={handleInputChange}
                 />
                 <div className="mt-5 flex gap-3">
-                    <button 
+                    <LoadButton 
                         className="btn btn-primary" 
                         disabled={disableButton}
+                        isLoading={isLoading}
+                        loadingText={category ? "Saving..." : "Adding..."}
                         onClick={handleSaveChanges}
                     >
                         {category ? "Save" : "Add"}
-                    </button>
-                    <button className="btn btn-red">Delete</button>
+                    </LoadButton>
+                    { category && 
+                        <LoadButton 
+                            className="btn btn-red"
+                            isLoading={isLoading}
+                            loadingText="Deleting..."
+                            onClick={handleDeleteClick}
+                        >
+                            Delete
+                        </LoadButton> 
+                    }
                 </div>
             </div>
             <Drawer opened={drawerOpened} onClose={drawer.close} title="Choose an Icon">

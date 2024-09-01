@@ -3,7 +3,10 @@ export interface CategoryObj {
     id: number;
     name: string;
     icon: string;
-    parentCategoryId: number | null
+    parentCategoryId: number | null;
+    _count: {
+        [key: string]: number;
+    }
 }
 
 export interface ParentCategoryObj {

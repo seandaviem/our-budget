@@ -5,7 +5,9 @@ import { Metadata } from "next"
 import CategoryListingPage from "@/components/CategoryListingPage/CategoryListingPage";
 import { addCategory } from "@/app/actions/addCategory";
 import { updateCategory } from "@/app/actions/updateCategory";
+import { deleteCategory } from "@/app/actions/deleteCategory";
 import { Toaster } from "react-hot-toast";
+import { getCategorySelectOptions } from "@/helpers/selectOptionHelpers";
 
 export const metadata: Metadata = {
     title: 'Manage Categories | Our Budget',
@@ -18,6 +20,7 @@ export default async function ManageCategories() {
 
     const categories = await getCategories();
     const categoriesSorted = sortCategories(categories);
+    const categorySelectOptions = getCategorySelectOptions(categoriesSorted);
 
     return (
         <>
@@ -28,6 +31,8 @@ export default async function ManageCategories() {
                         data={categoriesSorted} 
                         onAddCategory={addCategory}
                         onEditCategory={updateCategory}
+                        onDeleteCategory={deleteCategory}
+                        reassignOptions={categorySelectOptions}
                     />
                 </div>
             </main>
