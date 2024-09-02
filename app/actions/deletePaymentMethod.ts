@@ -15,7 +15,8 @@ export async function deletePaymentMethod(deleteId: number, reassignId: number |
     try {
         const childCounts = await prisma.paymentMethod.findUnique({
             where: {
-                id: deleteId
+                id: deleteId,
+                userId: userId,
             },
             include: {
                 _count: {
@@ -49,7 +50,8 @@ export async function deletePaymentMethod(deleteId: number, reassignId: number |
             transactions.push(
                 prisma.activity.updateMany({
                     where: {
-                        paymentMethodId: deleteId
+                        paymentMethodId: deleteId,
+                        userId: userId,
                     },
                     data: {
                         paymentMethodId: reassignId
@@ -63,7 +65,8 @@ export async function deletePaymentMethod(deleteId: number, reassignId: number |
             transactions.push(
                 prisma.reimbursement.updateMany({
                     where: {
-                        paymentMethodId: deleteId
+                        paymentMethodId: deleteId,
+                        userId: userId,
                     },
                     data: {
                         paymentMethodId: reassignId
@@ -76,7 +79,8 @@ export async function deletePaymentMethod(deleteId: number, reassignId: number |
         transactions.push(
             prisma.paymentMethod.delete({
                 where: {
-                    id: deleteId
+                    id: deleteId,
+                    userId: userId,
                 }
             })
         );

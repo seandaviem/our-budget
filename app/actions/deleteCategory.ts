@@ -15,7 +15,8 @@ export async function deleteCategory(deleteId: number, reassignId: number | null
     try {
         const childCounts = await prisma.category.findUnique({
             where: {
-                id: deleteId
+                id: deleteId,
+                userId: userId,
             },
             include: {
                 _count: {
@@ -49,7 +50,8 @@ export async function deleteCategory(deleteId: number, reassignId: number | null
             transactions.push(
                 prisma.activity.updateMany({
                     where: {
-                        categoryId: deleteId
+                        categoryId: deleteId,
+                        userId: userId,
                     },
                     data: {
                         categoryId: reassignId
@@ -62,7 +64,8 @@ export async function deleteCategory(deleteId: number, reassignId: number | null
         transactions.push(
             prisma.category.delete({
                 where: {
-                    id: deleteId
+                    id: deleteId,
+                    userId: userId,
                 }
             })
         );

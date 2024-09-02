@@ -20,6 +20,7 @@ export async function addReimbursement(formData: FormData, activityId: number) {
     const activity = await prisma.activity.findUnique({
         where: {
             id: activityId,
+            userId: userId,
             activityTypeId: ActivityTypeEnum.Expense || ActivityTypeEnum.BigExpense
         }
     });
