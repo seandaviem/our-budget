@@ -2,7 +2,7 @@
 
 import { useForm } from "@/helpers/hooks/useForm";
 import { ItemsDeletedResponse, ItemsObjType } from "./CategoryListingPage/CategoryListingPage";
-import React, { ChangeEvent, Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { ActionIcon, Drawer, TextInput } from "@mantine/core";
 import { IconFileDollar } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
@@ -31,6 +31,7 @@ export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpd
         icon: category?.icon || 'IconFileDollar',
         name: category?.name || '',
     });
+    
     const [disableButton, setDisableButton] = useState(true);
     const [drawerOpened, drawer] = useDisclosure(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -39,11 +40,6 @@ export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpd
     const addCategoryWithData = onAddCategory.bind(null, fields as ItemsObjType<T>, parentId);
     const deleteCategoryWithData = onDeleteCategory.bind(null, fields.id, null);
 
-    useEffect(() => {
-        if (drawerOpened) {
-            drawer.close();
-        }
-    }, [fields.icon])
 
     function handleInputChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
         const { name, value } = e.target;
@@ -56,7 +52,7 @@ export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpd
         }
     }
 
-    const handleIconSelect = useCallback((name: string) => {
+    function handleIconSelect(name: string) {
         updateForm({ key: 'icon', value: name });
 
         if (fields.name && (name !== category?.icon || fields.name !== category?.name)) {
@@ -64,7 +60,11 @@ export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpd
         } else {
             setDisableButton(true);
         }
-    }, [drawerOpened]);
+
+        if (drawerOpened) {
+            drawer.close();
+        }
+    };
 
     async function handleSaveChanges() {
         setIsLoading(true);

@@ -82,14 +82,23 @@ const IconPicker = React.memo(function IconPicker({ iconMap, onSelect }: IconPic
   );
 });
 
-const IconWrapper = React.memo(({ iconName, iconMap, onSelect }: IconWrapperProps) => {
-    const Icon = iconMap[iconName];
-    console.count("rendering IconWrapper");
-    return Icon ? (
-      <ActionIcon onClick={() => onSelect(iconName)} variant="light" size="lg">
-        <Icon size={ICON_SIZE} />
-      </ActionIcon>
-    ) : null;
-  });
+const IconWrapper = React.memo(
+    ({ iconName, iconMap, onSelect }: IconWrapperProps) => {
+        const Icon = iconMap[iconName];
+        console.count("rendering IconWrapper");
+        return Icon ? (
+            <ActionIcon
+                onClick={() => onSelect(iconName)}
+                variant="light"
+                size="lg"
+            >
+                <Icon size={ICON_SIZE} />
+            </ActionIcon>
+        ) : null;
+    }
+);
+
+IconPicker.displayName = "IconPicker";
+IconWrapper.displayName = "IconWrapper";
 
 export default IconPicker;

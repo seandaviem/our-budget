@@ -69,6 +69,8 @@ interface CategoryCardProps<T> {
     onAddCategoryClick: (parentId: number) => void;
 }
 
+const memoizedIconMap = getIconMap();
+
 export default function CategoryListingPage<T extends ItemsObj>({ type = 'Category', data, reassignOptions, parentIsEditable = true, onEditCategory, onAddCategory, onDeleteCategory }: CategoryListingPageProps<T>) {
 
     const [currentItem, setCurrentItem] = useState<ItemsObjType<T> | null>(null);
@@ -76,7 +78,7 @@ export default function CategoryListingPage<T extends ItemsObj>({ type = 'Catego
     const [modalOpened, modal] = useDisclosure(false);
     const [showDeleteCategoryForm, setShowDeleteCategoryForm] = useState(false);
     
-    const iconMap = useMemo(() => getIconMap(), []);
+    const iconMap = useMemo(() => memoizedIconMap, []);
 
     const modalTitle = currentItem ? `Edit ${type}` : `Add New ${type}`;
 

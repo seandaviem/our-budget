@@ -64,7 +64,9 @@ import { chunkTableData } from '@/helpers/chunkTableData';
         return chunkTableData(sortedData, itemsPerPage);
     }, [sortedData, showPagination, itemsPerPage]);
 
-    useEffect(() => setSortedData(sortRowData(data, { sortBy, reversed: reverseSortDirection })), [data]);
+    useEffect(() => {
+        setSortedData(sortRowData(data, { sortBy, reversed: reverseSortDirection }));
+    }, [data, sortBy, reverseSortDirection]);
 
     const setSorting = (field: keyof RowData) => {
         const reversed = field === sortBy ? !reverseSortDirection : false;
