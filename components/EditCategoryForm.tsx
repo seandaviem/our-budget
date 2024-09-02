@@ -14,6 +14,7 @@ import LoadButton from "./LoadButton";
 const IconPicker = dynamic(() => import("@/components/IconPicker"));
 
 interface EditCategoryFormProps<T> {
+    type: string;
     category: ItemsObjType<T> | null;
     parentId: number | null;
     iconMap: { [key: string]: React.ComponentType<any> };
@@ -24,7 +25,7 @@ interface EditCategoryFormProps<T> {
     setShowDeleteCategoryForm: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpdate, onEditCategory, onAddCategory, onDeleteCategory, setShowDeleteCategoryForm }: EditCategoryFormProps<T>) {
+export default function EditCategoryForm<T>({ type, category, parentId, iconMap, onUpdate, onEditCategory, onAddCategory, onDeleteCategory, setShowDeleteCategoryForm }: EditCategoryFormProps<T>) {
 
     const { fields, updateForm } = useForm({
         id: category?.id || 0,
@@ -79,7 +80,7 @@ export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpd
         if ("error" in result) {
             toast.error(result.error);
         } else {
-            toast.success(`Category has been ${category ? "updated" : "added"}!`);
+            toast.success(`${type} has been ${category ? "updated" : "added"}!`);
         }
 
         onUpdate();
@@ -95,7 +96,7 @@ export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpd
         if ("error" in result) {
             toast.error(result.error);
         } else {
-            toast.success("Category has been deleted!");
+            toast.success(`${type} has been deleted!`);
         }
 
         onUpdate();
@@ -117,14 +118,13 @@ export default function EditCategoryForm<T>({ category, parentId, iconMap, onUpd
             return;
         }
 
-        console.log("This ran");
         handleDeleteCategory();
 
     }
 
 
     return (
-        <>
+        <>  
             <div className="categoryForm flex flex-col gap-4">
                 {parentId && 
                     <ActionIcon 

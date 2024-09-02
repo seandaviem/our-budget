@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { getUserId } from "@/helpers/getUserId";
 import { getErrorMessage } from "@/helpers/getErrorMessage";
 
-export async function deleteCategory(deleteId: number, reassignId: number | null) {
+export async function deletePaymentMethod(deleteId: number, reassignId: number | null) {
     const userId = getUserId();
 
     if (!userId) {
@@ -13,7 +13,7 @@ export async function deleteCategory(deleteId: number, reassignId: number | null
     }
 
     try {
-        const childCounts = await prisma.category.findUnique({
+        const childCounts = await prisma.paymentMethod.findUnique({
             where: {
                 id: deleteId
             },
@@ -21,24 +21,24 @@ export async function deleteCategory(deleteId: number, reassignId: number | null
                 _count: {
                     select: {
                         activities: true,
-                        category: true,
+                        reimbursements: true,
                     }
                 }
             }
         });
 
         const activityCount = childCounts?._count.activities || 0;
-        const categoryCount = childCounts?._count.category || 0;
+        const reimbursementCount = childCounts?._count.reimbursements || 0;
     
         if (activityCount > 0 && reassignId === null) {
             return {
-                error: "This category has activities. Please reassign them before deleting."
+                error: "This payment method has activities. Please reassign them before deleting."
             };
         }
 
-        if (categoryCount > 0) {
+        if (reimbursementCount > 0) {
             return {
-                error: "This category has subcategories. Please delete them before deleting."
+                error: "This payment method has reimbursements. Please reassign them before deleting."
             };
         }
 
@@ -49,10 +49,24 @@ export async function deleteCategory(deleteId: number, reassignId: number | null
             transactions.push(
                 prisma.activity.updateMany({
                     where: {
-                        categoryId: deleteId
+                        paymentMethodId: deleteId
                     },
                     data: {
-                        categoryId: reassignId
+                        paymentMethodId: reassignId
+                    }
+                })
+            );
+        }
+
+        // reassign reimbursements to new category if needed
+        if (reimbursementCount > 0 && reassignId !== null) {
+            transactions.push(
+                prisma.reimbursement.updateMany({
+                    where: {
+                        paymentMethodId: deleteId
+                    },
+                    data: {
+                        paymentMethodId: reassignId
                     }
                 })
             );
@@ -60,7 +74,7 @@ export async function deleteCategory(deleteId: number, reassignId: number | null
 
         // delete category
         transactions.push(
-            prisma.category.delete({
+            prisma.paymentMethod.delete({
                 where: {
                     id: deleteId
                 }
@@ -69,7 +83,7 @@ export async function deleteCategory(deleteId: number, reassignId: number | null
 
         await prisma.$transaction(transactions);
 
-        revalidatePath("/manage/categories");
+        revalidatePath("/manage/payment-methods");
 
         return {
             success: true

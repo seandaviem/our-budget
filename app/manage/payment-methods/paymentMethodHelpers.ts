@@ -5,12 +5,16 @@ export function sortPaymentMethods(paymentMethods: PaymentMethodObj[]): PaymentM
     const paymentMethodsSorted: PaymentMethodsSorted = {};
 
     for (let i = 0; i < paymentMethods.length; i++) {
-        const activityTypeId = paymentMethods[i].activityType.id;
+        if ("activityType" in paymentMethods[i] === false) {
+            continue;
+        }
+
+        const activityTypeId = paymentMethods[i].activityType!.id;
 
         if (paymentMethodsSorted[activityTypeId] === undefined) {
             paymentMethodsSorted[activityTypeId] = {
-                activityTypeId: paymentMethods[i].activityType.id,
-                activityTypeName: paymentMethods[i].activityType.name,
+                id: paymentMethods[i].activityType!.id,
+                name: paymentMethods[i].activityType!.name,
                 items: [] 
             };
         }

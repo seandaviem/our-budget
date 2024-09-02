@@ -1,5 +1,5 @@
 import { CategoriesSorted, PaymentMethodObj, ActivityTypes } from "@/budget-types";
-import { ComboboxData } from "@mantine/core";
+import { ComboboxData, ComboboxItem } from "@mantine/core";
 
 export function getActivitySelectOptions(activityOptions: ActivityTypes[]): ComboboxData {
     if (activityOptions.length === 0) return ([{value: "", label: "No Activity Options Available", disabled: true}]);
@@ -24,4 +24,20 @@ export function getPaymentMethodSelectOptions(paymentMethodOptions: PaymentMetho
 
     return paymentMethodOptions.filter(option => option.activityType.id === activityTypeId)
             .map((option) => ({ value: option.id.toString(), label: option.name }));
+}
+
+export function getAllPaymentMethodSelectOptions(paymentMethodOptions: PaymentMethodObj[]): { [key: string]: ComboboxItem[] } {
+    const paymentMethodSelectOptions: { [key: string]: ComboboxItem[] } = {};
+
+    for (let i = 0; i < paymentMethodOptions.length; i++) {
+        const activityTypeId = paymentMethodOptions[i].activityType.id;
+
+        if (!(activityTypeId in paymentMethodSelectOptions)) {
+            paymentMethodSelectOptions[activityTypeId.toString()] = [{ value: paymentMethodOptions[i].id.toString(), label: paymentMethodOptions[i].name }];
+        } else {
+            paymentMethodSelectOptions[activityTypeId.toString()].push({ value: paymentMethodOptions[i].id.toString(), label: paymentMethodOptions[i].name });
+        }
+    }
+
+    return paymentMethodSelectOptions;
 }

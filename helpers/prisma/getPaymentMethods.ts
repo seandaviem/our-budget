@@ -10,7 +10,13 @@ export async function getPaymentMethods() {
             id: true,
             name: true,
             icon: true,
-            activityType: true
+            activityType: true,
+            _count: {
+                select: {
+                    activities: true,
+                    reimbursements: true,
+                }
+            }
         },
         orderBy: [
             {

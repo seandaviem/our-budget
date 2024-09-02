@@ -20,6 +20,7 @@ import { getIconMap } from '@/helpers/getIconMap';
 import { IconEdit, IconFileDollar } from '@tabler/icons-react';
 import AddCategoryItemForm from '@/app/manage/categories/AddCategoryItemForm';
 import DeleteCategoryForm from '../DeleteCategoryForm';
+import { ActivityTypes } from '@/budget-types';
 
 
 // TODOS:
@@ -34,6 +35,7 @@ export interface ItemsObj {
     _count: {
         [key: string]: number;
     }
+    activityType?: ActivityTypes;
 }
 
 export type ItemsObjType<T> = T extends ItemsObj ? T : never;
@@ -54,7 +56,7 @@ interface SortedItems<T> {
 interface CategoryListingPageProps<T> {
     type?: string;
     data: SortedItems<T>;
-    reassignOptions: ComboboxData;
+    reassignOptions: ComboboxData | { [key: string]: ComboboxData};
     parentIsEditable?: boolean;
     onEditCategory: (item: ItemsObjType<T>, parentId: number | null) => ItemsUpdatedResponse<T>;
     onAddCategory: (item: ItemsObjType<T>, parentId: number | null) => ItemsUpdatedResponse<T>;
@@ -81,6 +83,10 @@ export default function CategoryListingPage<T extends ItemsObj>({ type = 'Catego
     const iconMap = useMemo(() => memoizedIconMap, []);
 
     const modalTitle = currentItem ? `Edit ${type}` : `Add New ${type}`;
+
+    console.log(typeof reassignOptions)
+
+    const currReassignOptions = (currentItem !== null && "activityType" in currentItem) ? (reassignOptions as {[key: string]: ComboboxData})[currentItem.activityType!.id.toString()] : reassignOptions;
 
     function handleEditItem(item: ItemsObjType<T>, parentId: number | null) {
         setCurrentItem(item);
@@ -127,12 +133,13 @@ export default function CategoryListingPage<T extends ItemsObj>({ type = 'Catego
                 { showDeleteCategoryForm ? 
                     <DeleteCategoryForm
                         category={currentItem as ItemsObjType<T>}
-                        reassignOptions={reassignOptions}
+                        reassignOptions={currReassignOptions as ComboboxData}
                         onUpdate={handleModalClose}
                         onDeleteCategory={onDeleteCategory}
                     />
                 :
-                    <EditCategoryForm 
+                    <EditCategoryForm
+                        type={type}
                         category={currentItem as ItemsObjType<T>}
                         parentId={currentParentId as number | null}  
                         iconMap={iconMap}

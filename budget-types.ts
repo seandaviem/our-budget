@@ -77,12 +77,15 @@ export interface PaymentMethodObj {
     id: number;
     name: string;
     icon: string;
-    activityType: ActivityTypes;
+    activityType?: ActivityTypes;
+    _count: {
+        [key: string]: number;
+    }
 }
 
 export interface SortedPaymentMethodsObj {
-    activityTypeId: number;
-    activityTypeName: string;
+    id: number;
+    name: string;
     items: PaymentMethodObj[];
 }
 
