@@ -22,7 +22,7 @@ export function getPaymentMethodSelectOptions(paymentMethodOptions: PaymentMetho
     
     if (paymentMethodOptions.length === 0) return ([{value: "", label: "No Payment Methods Available", disabled: true}]);
 
-    return paymentMethodOptions.filter(option => option.activityType.id === activityTypeId)
+    return paymentMethodOptions.filter(option => option.activityType && option.activityType.id === activityTypeId)
             .map((option) => ({ value: option.id.toString(), label: option.name }));
 }
 
@@ -30,7 +30,7 @@ export function getAllPaymentMethodSelectOptions(paymentMethodOptions: PaymentMe
     const paymentMethodSelectOptions: { [key: string]: ComboboxItem[] } = {};
 
     for (let i = 0; i < paymentMethodOptions.length; i++) {
-        const activityTypeId = paymentMethodOptions[i].activityType.id;
+        const activityTypeId = paymentMethodOptions[i].activityType?.id || -1;
 
         if (!(activityTypeId in paymentMethodSelectOptions)) {
             paymentMethodSelectOptions[activityTypeId.toString()] = [{ value: paymentMethodOptions[i].id.toString(), label: paymentMethodOptions[i].name }];
