@@ -36,7 +36,7 @@ model Reimbursement {
   activityId      Int
   userId          String        @db.VarChar(191)
   paymentMethodId Int
-  activity        Activity      @relation(fields: [activityId], references: [id])
+  activity        Activity      @relation(fields: [activityId], references: [id], onDelete: Cascade)
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
 
   @@index([activityId])
