@@ -2,11 +2,18 @@ import prisma from "@/lib/db";
 import { getUserId } from "../getUserId";
 import { ActivitiesObj } from "@/budget-types";
 import { DateRangeProps } from "../getDateRangeObj";
+import { DefaultArgs } from "@prisma/client/runtime/library";
+import { Prisma } from "@prisma/client";
 
 export async function getActivities(limit = -1, dateRangeObj: DateRangeProps | null = null, startDate = '', endDate = ''): Promise<ActivitiesObj[]> {
     const userId = getUserId();
-    const activityQuery: any = {
-        where: { userId: userId },
+    const activityQuery: Prisma.ActivityFindManyArgs<DefaultArgs> = {
+        where: { 
+            userId: userId,
+            activityTypeId: {
+                notIn: [3] // Exclude reimbursements
+            }
+        },
         select: {
             id: true,
             date: true,
@@ -40,7 +47,7 @@ export async function getActivities(limit = -1, dateRangeObj: DateRangeProps | n
     } 
     // If dateQueryStart and dateQueryEnd are valid, add them to the query
     if (dateQueryStart && dateQueryEnd) {
-        activityQuery["where"]["date"] = {
+        activityQuery.where!.date! = {
             gte: new Date(dateQueryStart),
             lte: new Date(dateQueryEnd)
         }

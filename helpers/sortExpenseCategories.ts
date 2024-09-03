@@ -1,14 +1,16 @@
 import { SortedActivitiesObj } from "./sortActivities";
+import { ActivityTypeEnum } from "@/budget-types";
 
 // TODO: Implement ActivityTypeEnum when refactoring this later
 // returns the keys of the sortedActivities["2"]["categories"] object sorted by the total expense
 export function sortExpenseCategories(sortedActivities: SortedActivitiesObj, numResults = -1, order: 'asc' | 'desc' = 'desc') {
-    const sortedExpenseCategories = Object.keys(sortedActivities["2"]["categories"]).sort((a: string, b: string): number => {
-        const reimbursementA = sortedActivities["3"].categories[parseInt(a)] ? sortedActivities["3"].categories[parseInt(a)].total : 0;
-        const expenseA = sortedActivities["2"]["categories"][parseInt(a)].total - reimbursementA;
+    const sortedExpenseCategories = Object.keys(sortedActivities[ActivityTypeEnum.Expense]["categories"]).sort((a: string, b: string): number => {
+        
+        const reimbursementA = sortedActivities[ActivityTypeEnum.Expense]["categories"][parseInt(a)].reimbursementTotal;
+        const expenseA = sortedActivities[ActivityTypeEnum.Expense]["categories"][parseInt(a)].total - reimbursementA;
 
-        const reimbursementB = sortedActivities["3"].categories[parseInt(b)] ? sortedActivities["3"].categories[parseInt(b)].total : 0;
-        const expenseB = sortedActivities["2"]["categories"][parseInt(b)].total - reimbursementB;
+        const reimbursementB = sortedActivities[ActivityTypeEnum.Expense]["categories"][parseInt(b)].reimbursementTotal;
+        const expenseB = sortedActivities[ActivityTypeEnum.Expense]["categories"][parseInt(b)].total - reimbursementB;
 
         if (order === 'asc') {
             return expenseA - expenseB;
