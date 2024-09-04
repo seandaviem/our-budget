@@ -24,7 +24,7 @@ export default async function ManageCategories() {
 
     return (
         <>
-            <main className="container mx-auto">
+            <main className="container mx-auto max-sm:px-5">
                 {/* <CategoryListing categoriesSorted={categoriesSorted} /> */}
                 <div className="my-10">
                     <CategoryListingPage 

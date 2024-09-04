@@ -21,7 +21,7 @@ export default async function ManagePaymentMethods() {
 
     return (
         <>
-            <main className="container mx-auto">
+            <main className="container mx-auto max-sm:px-5">
                 {/* <PaymentMethodsListing paymentMethodsSorted={paymentMethodsSorted} activityTypes={activityTypes} /> */}
                 <div className="my-10">
                     <CategoryListingPage 

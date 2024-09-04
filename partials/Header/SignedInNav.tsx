@@ -36,6 +36,7 @@ interface MobileDropdownProps {
     subMenuItems: Array<React.JSX.Element>;
     linksOpened: boolean;
     toggleLinks: () => void;
+    closeDrawer: () => void;
 }
 
 const links = [
@@ -94,7 +95,7 @@ export default function SignedInNav() {
 
     const mobileItems = links.map((link) => {
         const subMenuItems = link.links?.map((item) => (
-            <Link key={item.label} href={item.link} className={`${classes.link} ${classes.subLink}`}>{item.label}</Link>
+            <Link key={item.label} href={item.link} onClick={() => closeDrawer()} className={`${classes.link} ${classes.subLink}`}>{item.label}</Link>
         ));
 
         if (subMenuItems as React.JSX.Element[]) {
@@ -105,12 +106,13 @@ export default function SignedInNav() {
                     subMenuItems={subMenuItems as React.JSX.Element[]}
                     linksOpened={linksOpened}
                     toggleLinks={toggleLinks}
+                    closeDrawer={closeDrawer}
                 />
             );
         }
 
         return (
-            <Link key={link.label} href={link.link} className={classes.link}>{link.label}</Link>
+            <Link key={link.label} href={link.link} onClick={() => closeDrawer()} className={classes.link}>{link.label}</Link>
         )
     });
 
@@ -126,6 +128,7 @@ export default function SignedInNav() {
 
                     <Group className={classes.loginSection} visibleFrom="md">
                         <OrganizationSwitcher 
+                            key={"desktopSwitcher"}
                             afterCreateOrganizationUrl='/'
                             afterSelectOrganizationUrl={pathname}
                             afterSelectPersonalUrl={pathname}
@@ -136,7 +139,7 @@ export default function SignedInNav() {
                                 }
                             }}
                         />
-                        <UserButton />
+                        <UserButton key="desktopUserButton" />
                     </Group>
 
                     <Burger
@@ -161,19 +164,28 @@ export default function SignedInNav() {
                         {mobileItems}
                     <Divider my="sm" />
 
-                    <Group justify="center" grow pb="xl" px="md">
-                        <OrganizationSwitcher 
+                    <Group justify="center" grow pb="xl" px="md" hiddenFrom="md">
+                        <OrganizationSwitcher
+                            key={"mobileSwitcher"} 
                             afterCreateOrganizationUrl='/'
                             afterSelectOrganizationUrl={pathname}
                             afterSelectPersonalUrl={pathname}
                             appearance={{
                                 elements: {
                                     organizationSwitcherTrigger: 'text-white',
-                                    organizationSwitcherTriggerIcon: 'text-white'
+                                    organizationSwitcherTriggerIcon: 'text-white',
+                                    organizationSwitcherPopoverCard: { zIndex: 1000000000 }
                                 }
                             }}
                         />
-                        <UserButton />
+                        <UserButton 
+                            key={"mobileUserButton"} 
+                            appearance={{
+                                elements: {
+                                    userButtonPopoverCard: { zIndex: 1000000000 }
+                                }
+                            }}
+                        />
                     </Group>
                 </ScrollArea>
             </Drawer>
@@ -181,12 +193,20 @@ export default function SignedInNav() {
     );
 }
 
-function MobileDropdown({link, subMenuItems, linksOpened, toggleLinks}: MobileDropdownProps) {
+function MobileDropdown({link, subMenuItems, linksOpened, toggleLinks, closeDrawer}: MobileDropdownProps) {
+
+    function handleMobileToggleLink(e: React.MouseEvent<HTMLAnchorElement>) {
+        if (!linksOpened) {
+            e.preventDefault();
+        } else {
+            closeDrawer();
+        }
+    }
     return (
         <>
             <UnstyledButton className='w-full' onClick={toggleLinks}>
                 <Center inline>
-                    <Box component={Link} className={classes.link} href={link.link} mr={5}>
+                    <Box component={Link} onClick={(e) => handleMobileToggleLink(e)} className={classes.link} href={link.link} mr={5}>
                         <span>{link.label}</span>
                         <IconChevronDown size="0.9rem" stroke={1.5} />
                     </Box>

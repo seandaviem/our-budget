@@ -25,7 +25,7 @@ export default async function AddActivity() {
 
     return (
         <>
-            <main className="container mx-auto pb-48">
+            <main className="container mx-auto pb-48 max-sm:px-5">
                 <div className="mt-10">
                     <AddActivityForm 
                         activityOptions={activityTypeOptions} 
