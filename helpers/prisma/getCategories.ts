@@ -3,7 +3,7 @@ import { getUserId } from "../getUserId";
 import { CategoryObj } from "@/budget-types";
 
 export async function getCategories() {
-    const userId = getUserId();
+    const userId = await getUserId();
     const categories: CategoryObj[] = await prisma.category.findMany({ 
         where: { userId: userId },
         select: {

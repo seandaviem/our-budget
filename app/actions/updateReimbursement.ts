@@ -6,7 +6,7 @@ import { getUserId } from "@/helpers/getUserId";
 import { getErrorMessage } from "@/helpers/getErrorMessage";
 
 export async function updateReimbursement(reimbursementId: number, reimbursementFields: {[key : string] : any}) {
-    const userId = getUserId();
+    const userId = await getUserId();
 
     const dataFields: {[key: string] : any} = {};
     if (reimbursementFields.name) {

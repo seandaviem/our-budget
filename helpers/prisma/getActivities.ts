@@ -6,7 +6,7 @@ import { DefaultArgs } from "@prisma/client/runtime/library";
 import { Prisma } from "@prisma/client";
 
 export async function getActivities(limit = -1, dateRangeObj: DateRangeProps | null = null, startDate = '', endDate = ''): Promise<ActivitiesObj[]> {
-    const userId = getUserId();
+    const userId = await getUserId();
     const activityQuery: Prisma.ActivityFindManyArgs<DefaultArgs> = {
         where: { 
             userId: userId,

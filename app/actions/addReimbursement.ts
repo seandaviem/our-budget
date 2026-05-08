@@ -14,7 +14,7 @@ export async function addReimbursement(formData: FormData, activityId: number) {
     const date = formData.get("date");
     const isoDate = (new Date(date as string)).toISOString();
     const description = formData.get("description");
-    const userId = getUserId();
+    const userId = await getUserId();
 
     // check to make sure activity is of type expense in db
     const activity = await prisma.activity.findUnique({

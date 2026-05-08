@@ -6,7 +6,7 @@ import { getUserId } from "@/helpers/getUserId";
 import { getErrorMessage } from "@/helpers/getErrorMessage";
 
 export async function deletePaymentMethod(deleteId: number, reassignId: number | null) {
-    const userId = getUserId();
+    const userId = await getUserId();
 
     if (!userId) {
         return new Response("Unauthorized", { status: 401 });

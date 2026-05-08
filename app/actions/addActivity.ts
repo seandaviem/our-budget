@@ -15,7 +15,7 @@ export async function addActivity(formData: FormData) {
     const date = formData.get("date");
     const isoDate = (new Date(date as string)).toISOString();
     const description = formData.get("description");
-    const userId = getUserId();
+    const userId = await getUserId();
 
     try {
         await prisma.activity.create({

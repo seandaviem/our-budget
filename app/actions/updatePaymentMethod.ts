@@ -7,7 +7,7 @@ import { getErrorMessage } from "@/helpers/getErrorMessage";
 import { ItemsObjType, ItemsObj } from "@/components/CategoryListingPage/CategoryListingPage";
 
 export async function updatePaymentMethod(fields: ItemsObjType<ItemsObj>, parentId: number | null) {
-    const userId = getUserId();
+    const userId = await getUserId();
 
     if (!userId) {
         return new Response("Unauthorized", { status: 401 });

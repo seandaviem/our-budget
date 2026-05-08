@@ -3,7 +3,7 @@ import { getUserId } from "../getUserId";
 import { PaymentMethodObj } from "@/budget-types";
 
 export async function getPaymentMethods() {
-    const userId = getUserId();
+    const userId = await getUserId();
     const paymentMethods: PaymentMethodObj[] = await prisma.paymentMethod.findMany({ 
         where: { userId: userId },
         select: {

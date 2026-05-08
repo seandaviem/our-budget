@@ -6,7 +6,7 @@ import { getUserId } from "@/helpers/getUserId";
 import { getErrorMessage } from "@/helpers/getErrorMessage";
 
 export async function deleteReimbursement(reimbursementId: number) {
-    const userId = getUserId();
+    const userId = await getUserId();
 
     try {
         const response = await prisma.reimbursement.delete({

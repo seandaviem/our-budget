@@ -6,7 +6,7 @@ import { getUserId } from "@/helpers/getUserId";
 import { getErrorMessage } from "@/helpers/getErrorMessage";
 
 export async function updateActivity(activityId: number, activityFields: {[key : string] : any}) {
-    const userId = getUserId();
+    const userId = await getUserId();
 
     const dataFields: {[key: string] : any} = {};
     if (activityFields.activityType) {

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 
 export default async function ManageCategories() {
-    const userId = getUserId();
+    const userId = await getUserId();
 
     const categories = await getCategories();
     const categoriesSorted = sortCategories(categories);

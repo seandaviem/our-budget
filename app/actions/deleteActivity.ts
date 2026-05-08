@@ -6,7 +6,7 @@ import { getUserId } from "@/helpers/getUserId";
 import { getErrorMessage } from "@/helpers/getErrorMessage";
 
 export async function deleteActivity(activityId: number) {
-    const userId = getUserId();
+    const userId = await getUserId();
 
     try {
         await prisma.activity.delete({
