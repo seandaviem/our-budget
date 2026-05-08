@@ -33,7 +33,7 @@ export default function RootLayout({
                 <body className={`${archivo.variable} ${openSans.variable}`}> 
                     <MantineProvider defaultColorScheme='dark'>
                         <Header />
-                        <DatesProvider settings={{ timezone: 'UTC' }}>
+                        <DatesProvider settings={{}}>
                             {children}
                         </DatesProvider>
                     </MantineProvider>
