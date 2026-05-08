@@ -1,14 +1,15 @@
-import { auth } from '@clerk/nextjs';
+import { auth } from "@clerk/nextjs/server";
 
-export function getUserId(): string {
-    const authObj = auth();
-    let userId = '';
+export async function getUserId(): Promise<string> {
+  const authObj = await auth();
 
-    if (authObj && authObj.orgId !== undefined) {
-        userId = authObj.orgId as string;
-    } else if (authObj && authObj.orgId === undefined) {
-        userId = authObj.userId as string;
-    }
+  if (authObj.orgId) {
+    return authObj.orgId;
+  }
 
-    return userId;
+  if (authObj.userId) {
+    return authObj.userId;
+  }
+
+  throw new Error("Unauthorized");
 }
